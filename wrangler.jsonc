@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blog-library",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true, "logs": { "enabled": true, "invocation_logs": true } },
+  "triggers": { "crons": ["0 4 * * *"] },
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "__ACCESS_TEAM_DOMAIN__",
+    "ALLOWED_EMAILS": "__ALLOWED_EMAILS__",
+    "AI_SEARCH_NAME": "blog-library",
+    "PUBLIC_ORIGIN": "__PUBLIC_ORIGIN__",
+    "CONTACT": "https://github.com/ruicunhanunes/cf-blog"
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "blog-library", "database_id": "__D1_ID__", "migrations_dir": "migrations" }
+  ],
+  "r2_buckets": [
+    { "binding": "POSTS", "bucket_name": "blog-library" },
+    { "binding": "OPS", "bucket_name": "blog-library-ops" }
+  ],
+  "kv_namespaces": [{ "binding": "OAUTH_KV", "id": "__KV_ID__" }],
+  "queues": {
+    "producers": [{ "binding": "FETCH_QUEUE", "queue": "blog-library-fetch" }],
+    "consumers": [
+      { "queue": "blog-library-fetch", "max_batch_size": 5, "max_concurrency": 2, "max_retries": 5, "dead_letter_queue": "blog-library-fetch-dlq", "max_batch_timeout": 5 },
+      { "queue": "blog-library-fetch-dlq", "max_batch_size": 10, "max_retries": 3 }
+    ]
+  },
+  "workflows": [{ "name": "blog-library-sync", "binding": "SYNC", "class_name": "SyncWorkflow" }],
+  "ai": { "binding": "AI" }
+}

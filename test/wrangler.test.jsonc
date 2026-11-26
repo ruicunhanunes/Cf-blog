@@ -1,0 +1,12 @@
+{
+  "name": "blog-library-harness",
+  "main": "harness.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": { "AI_SEARCH_NAME": "blog-library", "CONTACT": "local-test", "ACCESS_TEAM_DOMAIN": "", "ALLOWED_EMAILS": "", "PUBLIC_ORIGIN": "http://localhost:8799" },
+  "d1_databases": [{ "binding": "DB", "database_name": "blog-library-test", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "../migrations" }],
+  "r2_buckets": [{ "binding": "POSTS", "bucket_name": "t-posts" }, { "binding": "OPS", "bucket_name": "t-ops" }],
+  "kv_namespaces": [{ "binding": "OAUTH_KV", "id": "00000000000000000000000000000000" }],
+  "queues": { "producers": [{ "binding": "FETCH_QUEUE", "queue": "t-fetch" }] },
+  "workflows": [{ "name": "t-sync", "binding": "SYNC", "class_name": "SyncWorkflow" }]
+}
