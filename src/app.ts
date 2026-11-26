@@ -2,7 +2,7 @@ import type { AuthRequest } from "@cloudflare/workers-oauth-provider";
 import type { Env } from "./env";
 import { verifyAccess, type AccessIdentity } from "./auth/access";
 import { clamp, getPost, listFacet, listPosts, stats, yearCounts, type Filters } from "./search/data";
-import { search, type Mode } from "./search/hybrid";
+import { search, semanticStatus, type Mode } from "./search/hybrid";
 import { escapeHtml as e } from "./search/semantic";
 import { filtersForm, ICON_SVG, layout, MANIFEST, resultsBlock } from "./ui/views";
 import { APPLE_ICON_B64 } from "./ui/icon-png";
@@ -120,7 +120,7 @@ export async function appFetch(req: Request, env: Env, _ctx: ExecutionContext): 
     if (!q) return json({ error: "q is required" }, 400);
     const mode = (["keyword", "semantic", "hybrid"].includes(p.get("mode") ?? "") ? p.get("mode") : "keyword") as Mode;
     const t0 = Date.now();
-    const r = await search(env, q, mode, filtersFrom(p), clamp(Number(p.get("limit") ?? 20), 1, 50));
+    const r = await search(env, q, mode, filtersFrom(p), clamp(Number(p.get("limit") ?? 20), 1, 50), _ctx);
     console.log(JSON.stringify({ stage: "search", mode: r.mode, ms: Date.now() - t0, n: r.posts.length }));
     return json({ ...r, ms: Date.now() - t0 });
   }
@@ -149,18 +149,20 @@ export async function appFetch(req: Request, env: Env, _ctx: ExecutionContext): 
 <h2>Top tags</h2><div class="chips">${tags.map((t) => `<a href="/tag/${e(t.slug)}">${e(t.name)}<small>${t.count}</small></a>`).join("")}</div>
 <p><a href="/tags">All tags →</a></p>
 <h2>Authors A–Z</h2><div class="chips az">${letters.map((l) => `<a href="/authors#${l}">${l}</a>`).join("")}</div>`;
-    return html(layout("Cloudflare Blog Library", body, { footer: foot }));
+    return html(layout("Cloudflare Blog Library", body, { footer: foot, meaning: (await semanticStatus(env)) === "ok" }));
   }
 
   if (path === "/search") {
     const q = p.get("q")?.trim() ?? "";
     const mode = (p.get("mode") === "keyword" ? "keyword" : p.get("mode") ? (p.get("mode") as Mode) : "keyword") as Mode;
-    const r = q ? await search(env, q, mode, filtersFrom(p), 30) : { posts: [], mode };
-    const note = "degraded" in r && r.degraded ? `<p class="note">${e(r.degraded)}</p>` : "";
+    const r = q ? await search(env, q, mode, filtersFrom(p), 30, _ctx) : { posts: [], mode };
+    const kwLink = new URLSearchParams(p); kwLink.set("mode", "keyword"); kwLink.delete("partial");
+    const note = ("degraded" in r && r.degraded ? `<p class="note">${e(r.degraded)}</p>` : "") +
+      ("few" in r && r.few && r.mode !== "keyword" ? `<p class="note">Search by meaning found few matches with these filters. <a href="/search?${e(kwLink.toString())}">Try keyword mode →</a></p>` : "");
     const block = resultsBlock(r.posts, note);
     if (p.get("partial") === "1") return html(block);
     const tags = await listFacet(env, "tags", undefined, 300);
-    return html(layout(q ? `${q} · Blog Library` : "Search", filtersForm("/search", p, tags) + block, { q, mode, footer: await footer(env) }));
+    return html(layout(q ? `${q} · Blog Library` : "Search", filtersForm("/search", p, tags) + block, { q, mode, footer: await footer(env), meaning: (await semanticStatus(env)) === "ok" }));
   }
 
   const browse = path.match(/^\/(year|tag|author)\/([^/]+)$/);

@@ -3,7 +3,7 @@ import { escapeHtml } from "./semantic";
 import { clamp, filterSql, hydrate, type Filters, type PostCard } from "./data";
 
 /** Turn free text into a safe FTS5 query: quoted terms, implicit AND, prefix match on the last term. */
-const STOP = new Set("a an and are as at be by did do does for from has have how i in is it its of on or that the this to was were what when where which who why will with write wrote about cloudflare's".split(" "));
+const STOP = new Set("a an and are as at be by did do does for from has have how i in is it its of on or that the this to was were what when where which who why will with write wrote about cloudflare cloudflare's explain explained".split(" "));
 
 export function toFtsQuery(q: string, joiner: " " | " OR " = " "): string {
   const terms = q

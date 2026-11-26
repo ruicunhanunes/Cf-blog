@@ -1,5 +1,5 @@
 {
-  "description": "Known-item set (target: >= 18 of 20 in the top 5, keyword mode) and natural-language questions (target: >= 1 relevant post in the top 5, hybrid mode). Run with: node scripts/eval.mjs <origin> (needs a Cf-Access-Jwt-Assertion or run through the local harness).",
+  "description": "Known-item set (target: >= 18 of 20 in the top 5, keyword mode) and natural-language questions (target: >= 8 of 10 with a relevant post in the top 5, hybrid mode). Run: NODE_USE_ENV_PROXY=1 node scripts/eval.mjs",
   "known_items": [
     { "query": "regex outage July 2019", "slug": "details-of-the-cloudflare-outage-on-july-2-2019" },
     { "query": "cloudbleed parser memory leak", "slug": "incident-report-on-memory-leak-caused-by-cloudflare-parser-bug" },

@@ -32,7 +32,6 @@ function log(o: Record<string, unknown>) {
 }
 
 export async function processPost(job: FetchJob, env: Env): Promise<string> {
-  if (job.reindex) return reindexPost(job.slug, env);
   const url = canonicalUrl(job.slug);
 
   const mdRes = await blogFetch(url, env.CONTACT, "text/markdown");
@@ -102,7 +101,6 @@ export async function processPost(job: FetchJob, env: Env): Promise<string> {
     httpMetadata: { contentType: "text/markdown; charset=utf-8" },
     customMetadata: { url, published_at: published, title: title.slice(0, 200) },
   });
-  await indexInAiSearch(env, job.slug, doc, { url, title, published_at: published });
 
   const stmts: D1PreparedStatement[] = [
     env.DB.prepare(
@@ -145,16 +143,3 @@ async function fallbackMarkdown(html: string, env: Env): Promise<string> {
   return ((r as { data: string }).data ?? "").trim();
 }
 
-/** Upsert one post into the AI Search instance (built-in storage). Failures retry the message. */
-async function indexInAiSearch(env: Env, slug: string, doc: string, meta: Record<string, string>) {
-  await env.AI_SEARCH.items.upload(`${slug}.md`, doc, { metadata: meta });
-}
-
-async function reindexPost(slug: string, env: Env): Promise<string> {
-  const row = await env.DB.prepare("SELECT url, title, published_at, r2_key FROM posts WHERE slug = ? AND deleted_at IS NULL").bind(slug).first<{ url: string; title: string; published_at: string; r2_key: string }>();
-  if (!row) return "skipped";
-  const obj = await env.POSTS.get(row.r2_key);
-  if (!obj) return "missing-r2";
-  await indexInAiSearch(env, slug, await obj.text(), { url: row.url, title: row.title, published_at: row.published_at });
-  return "reindexed";
-}

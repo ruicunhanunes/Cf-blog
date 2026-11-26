@@ -12,7 +12,6 @@
   "vars": {
     "ACCESS_TEAM_DOMAIN": "mn-net.cloudflareaccess.com",
     "ALLOWED_EMAILS": "rui.cunhanunes@gmail.com",
-    "AI_SEARCH_NAME": "blog-library",
     "PUBLIC_ORIGIN": "https://blog-library.miguel-nunes-net.workers.dev",
     "CONTACT": "https://github.com/ruicunhanunes/cf-blog"
   },
@@ -33,5 +32,5 @@
   },
   "workflows": [{ "name": "blog-library-sync", "binding": "SYNC", "class_name": "SyncWorkflow" }],
   "ai": { "binding": "AI" },
-  "ai_search": [{ "binding": "AI_SEARCH", "instance_name": "blog-library" }]
+  "ratelimits": [{ "name": "SEMANTIC_RL", "namespace_id": "1001", "simple": { "limit": 30, "period": 60 } }]
 }

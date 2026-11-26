@@ -5,7 +5,8 @@ export interface Env {
   FETCH_QUEUE: Queue<FetchJob>;
   SYNC: Workflow<SyncParams>;
   AI: Ai;
-  AI_SEARCH: AiSearchInstance;
+  /** Workers rate limiter: 30 semantic queries a minute. */
+  SEMANTIC_RL?: RateLimit;
   OAUTH_KV: KVNamespace;
   OAUTH_PROVIDER: import("@cloudflare/workers-oauth-provider").OAuthHelpers;
 
@@ -15,15 +16,12 @@ export interface Env {
   ACCESS_AUD: string;
   /** Comma-separated list of allowed emails (defence in depth on top of the Access policy). */
   ALLOWED_EMAILS: string;
-  AI_SEARCH_NAME: string;
   CONTACT: string;
   /** e.g. https://blog-library.example.workers.dev (no trailing slash) */
   PUBLIC_ORIGIN: string;
 }
 
 export interface FetchJob {
-  /** Re-upload the stored Markdown to AI Search without re-crawling. */
-  reindex?: boolean;
   /** Rewrite even when the body hash is unchanged (metadata parser fixes). */
   force?: boolean;
   url: string;
@@ -34,8 +32,6 @@ export interface FetchJob {
 
 export interface SyncParams {
   full?: boolean;
-  /** Enqueue every stored post for AI Search re-upload; no crawling. */
-  reindex?: boolean;
   /** Re-fetch (forced) only these slugs. */
   slugs?: string[];
 }

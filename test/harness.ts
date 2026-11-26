@@ -35,8 +35,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
 
 export default {
   async fetch(req: Request, realEnv: Env): Promise<Response> {
-    // AI Search isn't available locally: stub uploads; search calls throw → hybrid degrades to keyword.
-    const env = { ...realEnv, AI_SEARCH: { items: { upload: async () => ({}) }, search: async () => { throw new Error("no AI Search locally"); } } } as unknown as Env;
+    const env = realEnv;
     const u = new URL(req.url);
     const p = u.searchParams;
     try {

@@ -1,35 +1,34 @@
-import { BLOG_ORIGIN, type Env } from "../env";
-import { slugOf } from "../sync/parse";
-import { clamp, getPost, listFacet, listPosts, stats } from "../search/data";
-import { search, type Mode } from "../search/hybrid";
-import { askBlog } from "../search/semantic";
+import type { Env } from "../env";
+import { clamp, listFacet, listPosts } from "../search/data";
+import { keywordSearch } from "../search/keyword";
 
 /**
  * Remote MCP server over Streamable HTTP (stateless, JSON responses).
- * Every tool is read-only and calls the same functions as the web UI.
+ * The PRD's M4 add-on: three read-only tools filling the official Blog MCP server's gaps
+ * (exact keyword search, filters, full history), calling the same functions as the web UI.
  */
 
-const SERVER_INFO = { name: "blog-library", title: "Cloudflare Blog Library", version: "1.0.0" };
+const SERVER_INFO = { name: "blog-library", title: "Cloudflare Blog Library (keyword + filters)", version: "1.1.0" };
 const SUPPORTED = ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"];
 const INSTRUCTIONS =
-  "Private library of every English post on blog.cloudflare.com (Cloudflare's public blog). " +
-  "Call search_posts before get_post. When the user names a Cloudflare product, call list_tags to find its tag slug, then filter by it. " +
-  "Always cite post URLs and publication dates in answers. Call library_stats to say how fresh the index is.";
+  "Add-on to the official Cloudflare Blog MCP server (https://blog.mcp.cloudflare.com/mcp). " +
+  "Use THIS server for exact terms, date/tag/author filters and full-history listing of English posts. " +
+  "Use the official server for search by meaning and for full post content (get_post). " +
+  "Content is Cloudflare's public blog; always cite post URLs and publication dates.";
 
 const RO = { readOnlyHint: true, openWorldHint: false };
 const iso = { type: "string", description: "ISO date (YYYY, YYYY-MM-DD or full timestamp)" };
 
 const TOOLS = [
   {
-    name: "search_posts",
-    title: "Search posts",
-    description: "Search Cloudflare blog posts by keyword, by meaning, or both (hybrid, default). Content is Cloudflare's public blog; cite post URLs and dates.",
+    name: "keyword_search_posts",
+    title: "Keyword search posts",
+    description: "Exact keyword search (SQLite FTS5, bm25; title hits outweigh body hits) over every English Cloudflare blog post, with optional tag, author and date filters. Use for half-remembered titles, product names, CVEs, dates.",
     inputSchema: {
       type: "object",
       properties: {
         query: { type: "string" },
-        mode: { type: "string", enum: ["keyword", "semantic", "hybrid"], default: "hybrid" },
-        tag: { type: "string", description: "Tag slug, see list_tags" },
+        tag: { type: "string", description: "Tag slug, e.g. zero-trust (the official server's list_tags lists them)" },
         author: { type: "string", description: "Author slug, see list_authors" },
         from: iso, to: iso,
         limit: { type: "integer", minimum: 1, maximum: 25, default: 10 },
@@ -39,23 +38,9 @@ const TOOLS = [
     annotations: RO,
   },
   {
-    name: "get_post",
-    title: "Get post",
-    description: "Get one post's metadata and Markdown body by slug or by any blog URL (localized URLs resolve to the English post).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        slug: { type: "string" }, url: { type: "string" },
-        include_body: { type: "boolean", default: true },
-        max_chars: { type: "integer", minimum: 500, maximum: 100000, default: 20000 },
-      },
-    },
-    annotations: RO,
-  },
-  {
     name: "list_posts",
     title: "List posts",
-    description: "List posts (no body) filtered by tag, author, year or since date; newest or oldest first; paginated with cursor.",
+    description: "List English posts (no body) filtered by tag, author, year or since date; newest or oldest first; paginated with cursor. Covers the full history.",
     inputSchema: {
       type: "object",
       properties: {
@@ -68,31 +53,10 @@ const TOOLS = [
     annotations: RO,
   },
   {
-    name: "list_tags",
-    title: "List tags",
-    description: "List tags with post counts; use to find the right tag slug before filtering.",
-    inputSchema: { type: "object", properties: { prefix: { type: "string" } } },
-    annotations: RO,
-  },
-  {
     name: "list_authors",
     title: "List authors",
-    description: "List authors with post counts.",
+    description: "List blog authors with post counts; use the slug with keyword_search_posts or list_posts.",
     inputSchema: { type: "object", properties: { prefix: { type: "string" } } },
-    annotations: RO,
-  },
-  {
-    name: "ask_blog",
-    title: "Ask the blog",
-    description: "Answer a natural-language question from the blog with a generated answer plus source posts. Costs model tokens; limited to 30 calls a day.",
-    inputSchema: { type: "object", properties: { question: { type: "string" }, from: iso, to: iso }, required: ["question"] },
-    annotations: RO,
-  },
-  {
-    name: "library_stats",
-    title: "Library stats",
-    description: "Post count, date range, last sync time and status.",
-    inputSchema: { type: "object", properties: {} },
     annotations: RO,
   },
 ];
@@ -100,52 +64,25 @@ const TOOLS = [
 type Args = Record<string, unknown>;
 const s = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
 const n = (v: unknown) => (typeof v === "number" ? v : typeof v === "string" && v ? Number(v) : undefined);
+const brief = (p: { slug: string; title: string; url: string; published_at: string; authors: { name: string }[]; tags: { slug: string }[] }) => ({
+  slug: p.slug, title: p.title, url: p.url, published_at: p.published_at, authors: p.authors.map((x) => x.name), tags: p.tags.map((x) => x.slug),
+});
 
-async function callTool(env: Env, user: string, name: string, a: Args): Promise<unknown> {
+async function callTool(env: Env, _user: string, name: string, a: Args): Promise<unknown> {
   switch (name) {
-    case "search_posts": {
+    case "keyword_search_posts": {
       const q = s(a.query);
       if (!q) throw new Error("query is required");
-      const mode = (["keyword", "semantic", "hybrid"].includes(String(a.mode)) ? a.mode : "hybrid") as Mode;
-      const r = await search(env, q, mode, { tag: s(a.tag), author: s(a.author), from: s(a.from), to: s(a.to) }, clamp(n(a.limit) ?? 10, 1, 25));
-      return {
-        mode: r.mode, degraded: r.degraded,
-        posts: r.posts.map((p) => ({ slug: p.slug, title: p.title, url: p.url, published_at: p.published_at, authors: p.authors.map((x) => x.name), tags: p.tags.map((x) => x.slug), snippet: p.snippet?.replace(/<\/?mark>/g, "") })),
-      };
-    }
-    case "get_post": {
-      let slug = s(a.slug);
-      const url = s(a.url);
-      if (!slug && url) {
-        const u = new URL(url, BLOG_ORIGIN);
-        if (u.host !== new URL(BLOG_ORIGIN).host) throw new Error("url must be on blog.cloudflare.com");
-        slug = slugOf(u.toString());
-      }
-      if (!slug) throw new Error("slug or url is required");
-      const post = await getPost(env, slug.toLowerCase(), a.include_body !== false, clamp(n(a.max_chars) ?? 20000, 500, 100000));
-      if (!post) throw new Error(`no post with slug ${slug}`);
-      return post;
+      const posts = await keywordSearch(env, q, { tag: s(a.tag), author: s(a.author), from: s(a.from), to: s(a.to) }, clamp(n(a.limit) ?? 10, 1, 25));
+      return { posts: posts.map((p) => ({ ...brief(p), snippet: p.snippet?.replace(/<\/?mark>/g, "") })) };
     }
     case "list_posts": {
       const sort = a.sort === "oldest" ? "oldest" : "newest";
       const r = await listPosts(env, { tag: s(a.tag), author: s(a.author), year: n(a.year), since: s(a.since), sort, limit: clamp(n(a.limit) ?? 25, 1, 100), cursor: s(a.cursor) });
-      return { posts: r.posts.map((p) => ({ slug: p.slug, title: p.title, url: p.url, published_at: p.published_at, authors: p.authors.map((x) => x.name), tags: p.tags.map((x) => x.slug) })), next_cursor: r.next_cursor };
+      return { posts: r.posts.map(brief), next_cursor: r.next_cursor };
     }
-    case "list_tags":
-      return { tags: await listFacet(env, "tags", s(a.prefix), 2000) };
     case "list_authors":
       return { authors: await listFacet(env, "authors", s(a.prefix), 2000) };
-    case "ask_blog": {
-      const q = s(a.question);
-      if (!q) throw new Error("question is required");
-      const key = `rl:ask:${user}:${new Date().toISOString().slice(0, 10)}`;
-      const used = Number((await env.OAUTH_KV.get(key)) ?? 0);
-      if (used >= 30) throw new Error("ask_blog daily limit (30) reached; use search_posts instead");
-      await env.OAUTH_KV.put(key, String(used + 1), { expirationTtl: 2 * 86400 });
-      return askBlog(env, q, { from: s(a.from), to: s(a.to) });
-    }
-    case "library_stats":
-      return stats(env);
     default:
       throw new RpcError(-32602, `Unknown tool: ${name}`);
   }

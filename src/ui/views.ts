@@ -37,8 +37,9 @@ footer{margin-top:32px;font-size:12px;color:var(--muted)}
 .az a{min-width:36px;justify-content:center}
 `;
 
-export function layout(title: string, body: string, opts: { q?: string; mode?: string; footer?: string } = {}): string {
+export function layout(title: string, body: string, opts: { q?: string; mode?: string; footer?: string; meaning?: boolean } = {}): string {
   const mode = opts.mode ?? "keyword";
+  const meaning = opts.meaning !== false;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
@@ -49,10 +50,10 @@ export function layout(title: string, body: string, opts: { q?: string; mode?: s
 <header><a class="brand" href="/">Cloudflare Blog Library</a>
 <form class="s" action="/search" method="get" role="search">
 <input type="search" name="q" value="${e(opts.q ?? "")}" placeholder="Search every post" autocomplete="off" autocapitalize="off" enterkeyhint="search" aria-label="Search">
-<div class="seg" role="radiogroup" aria-label="Mode">
+${meaning ? `<div class="seg" role="radiogroup" aria-label="Mode">
 <label><input type="radio" name="mode" value="keyword" ${mode === "keyword" ? "checked" : ""}><span>Keyword</span></label>
 <label><input type="radio" name="mode" value="hybrid" ${mode !== "keyword" ? "checked" : ""}><span>Meaning</span></label>
-</div></form></header>
+</div>` : `<input type="hidden" name="mode" value="keyword">`}</form></header>
 ${body}
 <footer>${opts.footer ?? ""}</footer></main>
 <script>

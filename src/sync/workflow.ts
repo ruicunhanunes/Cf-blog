@@ -1,6 +1,7 @@
 import { WorkflowEntrypoint, type WorkflowEvent, type WorkflowStep } from "cloudflare:workers";
 import { BLOG_ORIGIN, type Env, type FetchJob, type SyncParams } from "../env";
 import { blogFetch, localeOf, parseSitemapIndex, parseUrlset, slugOf } from "./parse";
+import { discoverEndpoint, fallbackSearch, primarySearch } from "../search/semantic";
 
 interface ChildResult {
   discovered: number;
@@ -21,16 +22,6 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
         return list.length;
       });
       return { refetch: n };
-    }
-    if (event.payload?.reindex) {
-      const n = await step.do("enqueue reindex", async () => {
-        const rows = await this.env.DB.prepare("SELECT slug, url FROM posts WHERE deleted_at IS NULL").all<{ slug: string; url: string }>();
-        for (let i = 0; i < rows.results.length; i += 100) {
-          await this.env.FETCH_QUEUE.sendBatch(rows.results.slice(i, i + 100).map((r) => ({ body: { reindex: true, slug: r.slug, url: r.url, lastmod: null, run_id: runId } })));
-        }
-        return rows.results.length;
-      });
-      return { reindex: n };
     }
     const startedAt = await step.do("start", async () => {
       const ts = new Date().toISOString();
@@ -100,6 +91,31 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
       ]);
       for (let i = 0; i < stmts.length; i += 50) await this.env.DB.batch(stmts.slice(i, i + 50));
       return `missing: ${missing.length}`;
+    });
+
+    // Daily canary against both semantic endpoints (PRD section 8).
+    await step.do("semantic canary", async () => {
+      const q = "how does cloudflare mitigate ddos attacks";
+      const day = new Date().toISOString().slice(0, 10);
+      let primaryOk = false, fallbackOk = false;
+      try {
+        const ep = await discoverEndpoint();
+        if (ep) {
+          const r = await primarySearch(ep, q);
+          primaryOk = r.hits.length >= 10;
+          await this.env.OPS.put(`fixtures/${day}/primary.json`, r.raw);
+        }
+      } catch (e) { console.log(JSON.stringify({ stage: "canary", source: "primary", outcome: "error", error: String(e) })); }
+      try {
+        const r = await fallbackSearch(q);
+        fallbackOk = r.hits.length >= 10;
+        await this.env.OPS.put(`fixtures/${day}/fallback.md`, r.raw);
+      } catch (e) { console.log(JSON.stringify({ stage: "canary", source: "fallback", outcome: "error", error: String(e) })); }
+      const status = primaryOk || fallbackOk ? "ok" : "degraded";
+      await this.env.DB.prepare("INSERT INTO settings (key, value, updated_at) VALUES ('semantic_status', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at")
+        .bind(status, new Date().toISOString()).run();
+      if (status === "degraded") console.error(JSON.stringify({ stage: "canary", outcome: "ALERT", message: "semantic endpoints degraded; Meaning toggle hidden" }));
+      return { primaryOk, fallbackOk, status };
     });
 
     // Wait for the queue consumer to drain this run's jobs (bounded), then write the report.

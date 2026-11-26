@@ -1,43 +1,64 @@
 # Cloudflare Blog Library
 
-A private, self-updating library of every English post on blog.cloudflare.com. It offers keyword search (D1 FTS5), search by meaning (AI Search), browse by year, tag and author, and a remote MCP server for agents. Everything sits behind Cloudflare Access.
+A private, self-updating library of every English post on blog.cloudflare.com: exact keyword search (D1 FTS5), browse by year, tag and author, and hybrid search that reuses the blog's **own** public AI Search endpoint. Agents use the **official** Cloudflare Blog MCP server, plus a small add-on here for the gaps M0 found. Everything sits behind Cloudflare Access.
 
 **Live:** https://blog-library.miguel-nunes-net.workers.dev (Access: rui.cunhanunes@gmail.com only)
-**MCP:** `https://blog-library.miguel-nunes-net.workers.dev/mcp`
+## Agent access
 
 ```bash
+# Official server: search by meaning, full post content, tags (no auth)
+claude mcp add --transport http cloudflare-blog https://blog.mcp.cloudflare.com/mcp
+# Library add-on: exact keyword search, filters, full-history listing (OAuth through Access)
 claude mcp add --transport http blog-library https://blog-library.miguel-nunes-net.workers.dev/mcp
 ```
 
-In claude.ai: Settings → Connectors → Add custom connector → paste the `/mcp` URL. Both clients open a browser window: you sign in through Access, approve the client, and get a token.
+In the Claude iPhone app or claude.ai: Settings → Connectors → Add custom connector, once per URL. The add-on opens a browser window where you sign in through Access and approve the client.
+
+### M0 results (2026-11-26): official Blog MCP server (v0.3.0)
+
+| Check | Result |
+|---|---|
+| tools/list | `search_posts(query)`, `list_posts(limit, cursor, tag)`, `get_post(slug)`, `list_tags()` |
+| Exact lookup: "regex outage 2019" → July 2, 2019 post in top 5 | **Fail**: rank 40 |
+| Filters (date, tag, author) | **Fail**: search takes only `query`; `list_posts` filters by tag only |
+| History back to 2010 | Pass: 75 pages, 3,708 posts, oldest 2009-04-28 |
+| English only | **Fail**: 31 of 49 search results are translations |
+| Full content | Pass: whole body, as HTML (32k chars for the 2019 post) |
+
+Three checks fail, so the add-on is built: `keyword_search_posts`, `list_posts`, `list_authors`.
+
+Public AI Search endpoint (from `/.well-known/api-catalog`): `POST /search` answers. Each chunk's post URL is in `item.key`, and its metadata carries `title`, `description`, `article:published_time` (epoch ms) and `language`. **`filters: {language: "en-us"}` works server-side:** 0 translations instead of 31 of 49, and the July 2019 post moves from rank 40 to 12. Hybrid (FTS5 + endpoint, RRF) puts it at #1.
 
 ## Architecture
 
 ```
-Cron 04:00 UTC ─▶ SyncWorkflow ── sitemap index → child sitemaps (prefix sitemap-posts*) → English filter → diff vs D1 ──▶ Queue
-                                                                                                                         │
-Queue consumer (concurrency 2, batch 5) ◀────────────────────────────────────────────────────────────────────────────────┘
-  GET post Accept: text/markdown  → body + tags ("Related tags" section)
-  GET post HTML  → HTMLRewriter: canonical, og:*, article:published_time, JSON-LD, byline authors
-  → R2 blog-library/posts/<slug>.md (frontmatter + body)   → AI Search items.upload(<slug>.md)
-  → D1 posts / tags / authors / posts_fts (one batch)       → R2 blog-library-ops/raw/<slug>.html (30-day lifecycle)
+Cron 04:00 UTC ─▶ SyncWorkflow ── sitemaps (prefix sitemap-posts*) → English filter → diff vs D1 ──▶ Queue
+                               └─ daily canary: public /search + /.well-known/search → settings.semantic_status
+Queue consumer (concurrency 2, batch 5)
+  GET post Accept: text/markdown → body + tags ("Related tags")
+  GET post HTML → HTMLRewriter: canonical, og:*, article:published_time, JSON-LD, byline authors
+  → R2 posts/<slug>.md   → D1 posts / tags / authors / posts_fts (one batch)   → R2 ops raw/<slug>.html (30 days)
 
-Worker (behind Access) ── /            server-rendered mobile UI (no framework; works without JS)
-                          /api/*       JSON API
-                          /authorize   OAuth consent for MCP clients (Access identity required)
-                          /mcp         MCP Streamable HTTP, bearer token from workers-oauth-provider
+Worker (behind Access)
+  /, /search, /year|tag|author/*   server-rendered mobile UI (works without JS)
+  /api/*                           JSON API
+  Meaning mode = hybrid: D1 FTS5 ∥ blog's public AI Search /search (fallback /.well-known/search), RRF k=60
+                 endpoint hostname from api-catalog (cached 1 day), responses cached 1 h, 30 queries/min, 3 s timeout,
+                 unknown slugs are shown from endpoint metadata and enqueued for fetching
+  /authorize, /mcp                 M4 add-on (OAuth via workers-oauth-provider; /authorize behind Access)
 ```
 
 | Binding | Resource | Purpose |
 |---|---|---|
-| `DB` | D1 `blog-library` | Metadata, FTS5, sync runs |
-| `POSTS` | R2 `blog-library` | Markdown corpus |
-| `OPS` | R2 `blog-library-ops` | Raw HTML (30 days), run reports, dead letters |
+| `DB` | D1 `blog-library` | Metadata, FTS5, sync runs, `settings.semantic_status` |
+| `POSTS` | R2 `blog-library` | Markdown corpus (Plan B source) |
+| `OPS` | R2 `blog-library-ops` | Raw HTML (30 days), run reports, dead letters, canary fixtures |
 | `FETCH_QUEUE` | Queue `blog-library-fetch` (+ `-dlq`) | Per-URL fetch jobs |
-| `SYNC` | Workflow `blog-library-sync` | Discover, diff, enqueue, wait, report |
+| `SYNC` | Workflow `blog-library-sync` | Discover, diff, enqueue, canary, wait, report |
 | `AI` | Workers AI | `toMarkdown` fallback |
-| `AI_SEARCH` | AI Search `blog-library` | Semantic search, `ask_blog` |
-| `OAUTH_KV` | KV | OAuth grants/tokens, consent state, `ask_blog` rate limit |
+| `SEMANTIC_RL` | Rate limiter | 30 semantic queries/minute |
+| `caches.default` | Cache API | Endpoint responses (1 h), api-catalog (1 day) |
+| `OAUTH_KV` | KV | M4: OAuth grants/tokens, consent state |
 
 ## Access model
 
@@ -55,7 +76,7 @@ export CLOUDFLARE_API_TOKEN=...      # account token
 npx wrangler deploy
 npx wrangler workflows trigger blog-library-sync '{}'               # incremental sync (cron does this daily)
 npx wrangler workflows trigger blog-library-sync '{"full":true}'    # re-fetch everything, ignoring lastmod
-npx wrangler workflows trigger blog-library-sync '{"reindex":true}' # re-upload stored Markdown to AI Search (no crawl)
+npx wrangler workflows trigger blog-library-sync '{"slugs":["a","b"]}' # force re-fetch specific posts
 npx wrangler d1 execute blog-library --remote --command "SELECT * FROM sync_runs ORDER BY id DESC LIMIT 5"
 ```
 
@@ -80,12 +101,12 @@ curl "localhost:8799/ui/?as=intruder@example.com"         # → 403
 |---|---|---|
 | Drop any URL whose first segment matches `^[a-z]{2}-[a-z]{2}$` | Drop only multi-segment paths that match | The English post `/cf-ui` matches the regex and would have been dropped. |
 | Tags and authors from HTML tag links | Tags from the Markdown "Related tags" section; authors from byline links (class `text-display`) and JSON-LD | Every page includes ~800 tag links in its navigation, so naive `/tag/` link parsing would tag every post with every tag. |
-| AI Search with an R2 data source | AI Search **built-in storage**; the consumer uploads each post as it is written | An R2 source needs a separately registered AI Search service token. Uploading directly also makes semantic freshness immediate, instead of the 24-hour sync interval. |
+| Post-filter translations out of endpoint results | Also pushed down: `filters: {language: "en-us"}` on the public `/search` | Measured in M0: 50 English posts per query instead of ~18, so filters have more to work with. Locale-prefix stripping stays as a second line of defence (and for the fallback). |
 | `library.<your-domain>` with workers.dev disabled | `blog-library.miguel-nunes-net.workers.dev`, protected by Access | Needs no DNS change on your zones. To move to a custom domain, add a `routes` custom domain and point the Access app at it. |
-| MCP via Agents SDK `McpAgent` (Durable Object) | Stateless Streamable HTTP JSON-RPC handler in `src/mcp/server.ts` | The tools are read-only and need no sessions. This removes a Durable Object and avoids the Agents SDK's in-flight MCP SDK v1→v2 migration. Tool surface is unchanged (7 tools, `readOnlyHint`). |
+| M4 add-on via Agents SDK `McpAgent` (Durable Object) | Stateless Streamable HTTP JSON-RPC handler in `src/mcp/server.ts` | The 3 tools are read-only and need no sessions. This removes the `MCP_OBJECT` Durable Object and avoids the Agents SDK's in-flight MCP SDK v1→v2 migration. |
 | OAuth via Access for SaaS OIDC | `workers-oauth-provider`, with `/authorize` behind the Access self-hosted app | The same guarantee ("only identities in the Access policy get a token") without a second Access application or client secrets. |
 | `/admin/*` needs an Access service token too | Access identity + same-origin POST check | Re-crawls are idempotent and rate-limited by the queue. Add a service-token check if you share the app. |
-| Email alerts on failed or stale syncs | Structured logs (`stage`, `outcome`) and `sync_runs.status`; the footer shows the last run | No Email Service sender is configured on the account. |
+| Email alerts (failed sync, degraded canary) | `console.error` lines with `outcome: "ALERT"` in Workers Logs, `sync_runs.status`, `settings.semantic_status`; the footer shows the last run | No Email Service sender is configured on the account. |
 | Keyword search ANDs every term | AND first; if nothing matches, stopwords are removed and terms ORed (still bm25-ranked) | Natural-language questions such as "What did Cloudflare write about the July 2019 outage?" otherwise return nothing. |
 
 ## Repository layout
@@ -95,10 +116,11 @@ migrations/0001_init.sql   D1 schema (FTS5 posts_fts, sync_runs, checked_at for 
 src/index.ts               OAuth provider wiring, cron, queue handlers
 src/app.ts                 UI + JSON API + OAuth consent + admin
 src/auth/access.ts         Cf-Access-Jwt-Assertion verification
-src/sync/{workflow,consumer,parse}.ts
-src/search/{data,keyword,semantic,hybrid}.ts
-src/mcp/server.ts          MCP JSON-RPC handler + 7 tools
+src/sync/{workflow,consumer,parse}.ts   workflow includes the daily canary
+src/search/{data,keyword,semantic,hybrid}.ts   semantic = public endpoint client + fallback parser
+src/mcp/server.ts          M4 add-on: MCP JSON-RPC handler + 3 tools
 src/ui/views.ts            HTML, CSS, manifest, icons
 test/harness.ts            local test harness (not deployed)
-test/known-items.json      known-item and semantic test sets
+test/known-items.json      20 known posts + 10 questions (scripts/eval.mjs)
+test/fixtures/             raw endpoint responses for the parsers (the canary adds daily ones in R2 ops/fixtures/)
 ```

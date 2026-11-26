@@ -11,18 +11,15 @@ async function rpc(method, params) {
   return j.result;
 }
 const calls = [
-  ["search_posts", { query: "What did Cloudflare write about the July 2019 outage?", limit: 3 }],
-  ["get_post", { url: "https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/", max_chars: 500 }],
-  ["list_posts", { tag: "outage", limit: 3 }],
-  ["list_tags", { prefix: "work" }],
+  ["keyword_search_posts", { query: "regex outage 2019", limit: 3 }],
+  ["keyword_search_posts", { query: "ddos", tag: "ddos", from: "2013", to: "2013", limit: 3 }],
+  ["list_posts", { tag: "outage", sort: "oldest", limit: 3 }],
   ["list_authors", { prefix: "john" }],
-  ["library_stats", {}],
-  ["ask_blog", { question: "Why did a regular expression take down Cloudflare in July 2019?" }],
 ];
 await rpc("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "smoke", version: "1" } });
 const { tools } = await rpc("tools/list", {});
 console.log(`tools: ${tools.map((t) => t.name).join(", ")} (${tools.length})`);
-let fail = 0;
+let fail = tools.length === 3 ? 0 : 1;
 for (const [name, args] of calls) {
   try {
     const r = await rpc("tools/call", { name, arguments: args });
