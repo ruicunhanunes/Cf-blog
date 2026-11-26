@@ -29,6 +29,19 @@ Three checks fail, so the add-on is built: `keyword_search_posts`, `list_posts`,
 
 Public AI Search endpoint (from `/.well-known/api-catalog`): `POST /search` answers. Each chunk's post URL is in `item.key`, and its metadata carries `title`, `description`, `article:published_time` (epoch ms) and `language`. **`filters: {language: "en-us"}` works server-side:** 0 translations instead of 31 of 49, and the July 2019 post moves from rank 40 to 12. Hybrid (FTS5 + endpoint, RRF) puts it at #1.
 
+## Status (2026-11-26)
+
+| PRD measure | Result |
+|---|---|
+| Coverage | 3,704 / 3,704 English sitemap posts (100%), plus 1 live post missing from the sitemaps (`waf-content-scanning-for-malware-detection`). Matches the official server's 3,708 minus 3 `-uk-ua` translations. Oldest 2009-04-28. |
+| Quality | 0 empty titles or dates, 0 fallback conversions, 100% of posts with authors and tags; 3 posts under 50 words, all genuinely that short |
+| Second run writes 0 posts | Yes: incremental run wrote 0 |
+| Known-item test set (keyword) | 18 / 20 in the top 5 (target ≥ 18). Misses: "cloudbleed parser memory leak" and "1.1.1.1 dns resolver launch" (the April 2018 launch post `announcing-1111` is #3; the test expects its companion post) |
+| Hybrid: 10 questions | 10 / 10 with a relevant post in the top 3 (target ≥ 8 in the top 5) |
+| Hybrid: "regex outage 2019" | July 2, 2019 post at #1 (official MCP server: #40) |
+| Canary | primary ✓, fallback ✓ → `semantic_status = ok` |
+| Locales dropped in the backfill | 4,428 URLs across 20 locales |
+
 ## Architecture
 
 ```
