@@ -1,0 +1,727 @@
+{
+  "_doc": "Curation on top of the docs directory. Per product: aliases (former names, also matched), terms (replace the default name+aliases match terms; for names that are ordinary words), add_terms, tags (added to the automatic name match), not_tags, parent, categories, status. Terms are case-sensitive; a 'Cloudflare <term>' variant is added automatically. extra = products not in the directory (retired, or missing from it). stop_terms are consumed but credit no product, so 'Service Worker' never counts as Workers.",
+  "exclude": [
+    "account",
+    "api-documentation",
+    "billing",
+    "cloudflare-fundamentals",
+    "learning-paths",
+    "oauth-documentation",
+    "reference-architecture",
+    "resource-tagging",
+    "support",
+    "version-management"
+  ],
+  "stop_terms": [
+    "Service Worker",
+    "Service Workers",
+    "Web Worker",
+    "Web Workers",
+    "Shared Worker"
+  ],
+  "products": {
+    "1-1-1-1": {
+      "tags": [
+        "resolver",
+        "doh"
+      ]
+    },
+    "access": {
+      "terms": [
+        "Cloudflare Access",
+        "Zero Trust Access",
+        "Access policy",
+        "Access policies",
+        "Access application",
+        "Access applications"
+      ]
+    },
+    "agents": {
+      "terms": [
+        "Agents SDK",
+        "Cloudflare Agents"
+      ]
+    },
+    "ai": {
+      "terms": [],
+      "tags": [
+        "generative-ai",
+        "llm",
+        "machine-learning",
+        "artificial-intelligence"
+      ]
+    },
+    "ai-crawl-control": {
+      "aliases": [
+        "AI Audit",
+        "Pay per crawl",
+        "Pay Per Crawl"
+      ],
+      "tags": [
+        "ai-bots",
+        "pay-per-crawl"
+      ]
+    },
+    "ai-search": {
+      "aliases": [
+        "AutoRAG"
+      ]
+    },
+    "analytics": {
+      "terms": [
+        "Cloudflare Analytics"
+      ]
+    },
+    "api-shield": {
+      "tags": [
+        "api-gateway",
+        "api-security"
+      ]
+    },
+    "argo-smart-routing": {
+      "add_terms": [
+        "Argo"
+      ]
+    },
+    "artifacts": {
+      "terms": [
+        "Cloudflare Artifacts"
+      ]
+    },
+    "automatic-platform-optimization": {
+      "add_terms": [
+        "APO"
+      ]
+    },
+    "basin": {
+      "terms": [
+        "Cloudflare Basin"
+      ]
+    },
+    "basin-catalog": {
+      "aliases": [
+        "R2 Data Catalog"
+      ],
+      "tags": [
+        "data-catalog"
+      ]
+    },
+    "basin-pipelines": {
+      "aliases": [
+        "Cloudflare Pipelines"
+      ],
+      "tags": [
+        "pipelines"
+      ]
+    },
+    "basin-sql": {
+      "aliases": [
+        "R2 SQL"
+      ]
+    },
+    "bots": {
+      "terms": [
+        "Bot Management",
+        "Bot Fight Mode",
+        "Super Bot Fight Mode"
+      ],
+      "tags": [
+        "bot-management"
+      ]
+    },
+    "browser-isolation": {
+      "aliases": [
+        "Remote Browser Isolation"
+      ],
+      "tags": [
+        "remote-browser-isolation"
+      ]
+    },
+    "browser-run": {
+      "aliases": [
+        "Browser Rendering"
+      ],
+      "tags": [
+        "browser-rendering"
+      ]
+    },
+    "cache": {
+      "terms": [
+        "Cloudflare CDN",
+        "Cache Rules",
+        "Tiered Cache",
+        "Argo Tiered Cache"
+      ],
+      "tags": [
+        "cdn",
+        "tiered-cache",
+        "cache-rules",
+        "crawler-hints"
+      ]
+    },
+    "challenges": {
+      "terms": [
+        "Cloudflare Challenges",
+        "Managed Challenge",
+        "Managed Challenges"
+      ],
+      "tags": [
+        "captcha"
+      ]
+    },
+    "client-side-security": {
+      "aliases": [
+        "Page Shield"
+      ],
+      "tags": [
+        "page-shield"
+      ],
+      "add_terms": [
+        "Client-Side Security"
+      ]
+    },
+    "cloudflare-for-saas": {
+      "aliases": [
+        "SSL for SaaS"
+      ]
+    },
+    "cloudflare-images": {
+      "aliases": [
+        "Image Resizing"
+      ],
+      "tags": [
+        "image-resizing",
+        "image-optimization"
+      ]
+    },
+    "cloudflare-network-firewall": {
+      "aliases": [
+        "Magic Firewall"
+      ],
+      "tags": [
+        "magic-firewall"
+      ]
+    },
+    "cloudflare-observability": {
+      "add_terms": [
+        "Workers Observability"
+      ]
+    },
+    "cloudflare-ohttp-relay": {
+      "aliases": [
+        "Privacy Gateway",
+        "Oblivious HTTP"
+      ]
+    },
+    "cloudflare-one": {
+      "aliases": [
+        "Cloudflare for Teams",
+        "Cloudflare Zero Trust"
+      ],
+      "tags": [
+        "zero-trust",
+        "cloudflare-zero-trust",
+        "sase",
+        "teams-dashboard",
+        "private-network"
+      ]
+    },
+    "cloudflare-tunnel": {
+      "aliases": [
+        "Argo Tunnel",
+        "Cloudflare Warp"
+      ],
+      "add_terms": [
+        "cloudflared"
+      ]
+    },
+    "cloudflare-wan": {
+      "aliases": [
+        "Magic WAN"
+      ],
+      "tags": [
+        "magic-wan"
+      ]
+    },
+    "cloudflare-web-analytics": {
+      "add_terms": [
+        "Web Analytics"
+      ]
+    },
+    "containers": {
+      "terms": [
+        "Cloudflare Containers"
+      ]
+    },
+    "data-localization-suite": {
+      "aliases": [
+        "Regional Services"
+      ],
+      "tags": [
+        "regional-services"
+      ]
+    },
+    "data-loss-prevention": {
+      "add_terms": [
+        "DLP"
+      ],
+      "tags": [
+        "dlp"
+      ]
+    },
+    "ddos-protection": {
+      "tags": [
+        "ddos",
+        "advanced-ddos"
+      ]
+    },
+    "digital-experience-monitoring": {
+      "add_terms": [
+        "DEX"
+      ],
+      "tags": [
+        "dex"
+      ]
+    },
+    "dns": {
+      "terms": [
+        "Cloudflare DNS",
+        "Authoritative DNS",
+        "Foundation DNS",
+        "Secondary DNS",
+        "DNSSEC"
+      ],
+      "tags": [
+        "dnssec"
+      ]
+    },
+    "durable-objects": {
+      "add_terms": [
+        "Durable Object"
+      ]
+    },
+    "email-security": {
+      "aliases": [
+        "Area 1",
+        "Area 1 Security",
+        "Cloud Email Security"
+      ],
+      "tags": [
+        "cloud-email-security",
+        "area-1-security"
+      ]
+    },
+    "email-service": {
+      "aliases": [
+        "Email Routing",
+        "Email Workers"
+      ],
+      "tags": [
+        "email-routing",
+        "email-workers"
+      ]
+    },
+    "flagship": {
+      "terms": [
+        "Cloudflare Flagship"
+      ]
+    },
+    "gateway": {
+      "terms": [
+        "Cloudflare Gateway",
+        "Secure Web Gateway"
+      ],
+      "tags": [
+        "secure-web-gateway",
+        "dns-filtering"
+      ]
+    },
+    "graphql-analytics-api": {
+      "add_terms": [
+        "GraphQL Analytics"
+      ]
+    },
+    "key-transparency-auditor": {
+      "add_terms": [
+        "Key Transparency"
+      ]
+    },
+    "kv": {
+      "terms": [
+        "Workers KV",
+        "KV namespace",
+        "KV namespaces"
+      ],
+      "tags": [
+        "cloudflare-workers-kv"
+      ]
+    },
+    "leaked-credentials-detection": {
+      "add_terms": [
+        "Leaked Credentials Detection",
+        "leaked credentials detection"
+      ]
+    },
+    "load-balancing": {
+      "add_terms": [
+        "Load Balancer"
+      ]
+    },
+    "logs": {
+      "terms": [
+        "Logpush",
+        "Logpull",
+        "Instant Logs",
+        "Cloudflare Logs"
+      ]
+    },
+    "moq": {
+      "aliases": [
+        "Media over QUIC"
+      ]
+    },
+    "network-flow": {
+      "aliases": [
+        "Magic Network Monitoring"
+      ]
+    },
+    "notifications": {
+      "terms": [
+        "Cloudflare Notifications"
+      ]
+    },
+    "pages": {
+      "terms": [
+        "Cloudflare Pages",
+        "Pages Functions"
+      ]
+    },
+    "queues": {
+      "terms": [
+        "Cloudflare Queues"
+      ]
+    },
+    "radar": {
+      "terms": [
+        "Cloudflare Radar"
+      ]
+    },
+    "randomness-beacon": {
+      "aliases": [
+        "League of Entropy",
+        "drand"
+      ],
+      "tags": [
+        "lavarand"
+      ]
+    },
+    "rate-limiting": {
+      "add_terms": [
+        "Rate Limiting Rules"
+      ]
+    },
+    "realtime": {
+      "terms": [
+        "Cloudflare Realtime",
+        "Cloudflare Calls"
+      ],
+      "tags": [
+        "cloudflare-calls"
+      ],
+      "not_tags": [
+        "real-time"
+      ]
+    },
+    "registrar": {
+      "terms": [
+        "Cloudflare Registrar",
+        "Registrar"
+      ]
+    },
+    "rules": {
+      "terms": [
+        "Page Rules",
+        "Transform Rules",
+        "Configuration Rules",
+        "Origin Rules",
+        "Redirect Rules",
+        "Cloudflare Snippets"
+      ],
+      "tags": [
+        "page-rules",
+        "transform-rules",
+        "edge-rules"
+      ]
+    },
+    "ruleset-engine": {
+      "add_terms": [
+        "Rulesets API"
+      ]
+    },
+    "sandboxes": {
+      "terms": [
+        "Cloudflare Sandbox",
+        "Sandbox SDK"
+      ],
+      "tags": [
+        "sandbox"
+      ]
+    },
+    "speed": {
+      "terms": [
+        "Rocket Loader",
+        "Cloudflare Polish",
+        "Mirage",
+        "Auto Minify",
+        "Speed Brain",
+        "Early Hints",
+        "Cloudflare Observatory"
+      ],
+      "tags": [
+        "rocketloader",
+        "cloudflare-polish",
+        "mirage"
+      ]
+    },
+    "ssl-tls": {
+      "terms": [
+        "SSL/TLS",
+        "Universal SSL",
+        "Advanced Certificate Manager",
+        "Total TLS"
+      ],
+      "tags": [
+        "ssl",
+        "tls",
+        "universal-ssl",
+        "advanced-certificate-manager",
+        "tls-1-3"
+      ]
+    },
+    "stream": {
+      "terms": [
+        "Cloudflare Stream",
+        "Stream Live"
+      ],
+      "tags": [
+        "live-streaming"
+      ]
+    },
+    "tenant": {
+      "terms": []
+    },
+    "time-services": {
+      "terms": [
+        "Time Services",
+        "Roughtime",
+        "time.cloudflare.com"
+      ]
+    },
+    "turn-service": {
+      "terms": [
+        "TURN Service",
+        "Cloudflare TURN"
+      ],
+      "tags": [
+        "turn"
+      ]
+    },
+    "waf": {
+      "add_terms": [
+        "Web Application Firewall",
+        "WAF Managed Rules"
+      ],
+      "tags": [
+        "waf-rules",
+        "managed-rules",
+        "firewall",
+        "ai-waf"
+      ]
+    },
+    "warp-client": {
+      "terms": [
+        "WARP",
+        "WARP+",
+        "WARP client"
+      ],
+      "tags": [
+        "warp"
+      ]
+    },
+    "web3": {
+      "terms": [
+        "Cloudflare Web3",
+        "Web3 Gateways",
+        "IPFS Gateway",
+        "Ethereum Gateway"
+      ],
+      "tags": [
+        "ipfs",
+        "ethereum"
+      ]
+    },
+    "workers": {
+      "terms": [
+        "Workers",
+        "Worker",
+        "Workers Unbound",
+        "Workers Paid"
+      ],
+      "tags": [
+        "wrangler"
+      ]
+    },
+    "workers-analytics-engine": {
+      "aliases": [
+        "Analytics Engine"
+      ]
+    },
+    "workflows": {
+      "terms": [
+        "Cloudflare Workflows"
+      ]
+    },
+    "zaraz": {
+      "tags": [
+        "managed-components"
+      ]
+    },
+    "network": {
+      "terms": [
+        "WebSockets",
+        "HTTP/2",
+        "HTTP/3",
+        "QUIC",
+        "IPv6",
+        "gRPC",
+        "Onion Routing",
+        "Pseudo IPv4",
+        "0-RTT"
+      ],
+      "tags": [
+        "http2",
+        "http3",
+        "quic",
+        "ipv6",
+        "spdy"
+      ],
+      "not_tags": [
+        "network",
+        "cloudflare-network"
+      ]
+    }
+  },
+  "extra": [
+    {
+      "slug": "always-online",
+      "name": "Always Online",
+      "description": "Serve cached copies of pages when the origin is down",
+      "categories": [
+        "Application performance"
+      ],
+      "parent": "cache",
+      "status": "current",
+      "tags": [
+        "always-online"
+      ]
+    },
+    {
+      "slug": "cdnjs",
+      "name": "cdnjs",
+      "description": "Free, open-source CDN for JavaScript libraries",
+      "categories": [
+        "Developer platform"
+      ],
+      "status": "current",
+      "terms": [
+        "cdnjs",
+        "CDNJS"
+      ],
+      "tags": [
+        "cdnjs"
+      ]
+    },
+    {
+      "slug": "cloudforce-one",
+      "name": "Cloudforce One",
+      "description": "Threat intelligence and threat operations team and products",
+      "categories": [
+        "Application security"
+      ],
+      "status": "current",
+      "tags": [
+        "cloudforce-one",
+        "threat-intelligence"
+      ]
+    },
+    {
+      "slug": "cloudflare-apps",
+      "name": "Cloudflare Apps",
+      "description": "Marketplace of apps installable on Cloudflare sites (retired)",
+      "categories": [
+        "Core platform"
+      ],
+      "status": "retired",
+      "terms": [
+        "Cloudflare Apps"
+      ],
+      "tags": [
+        "cloudflare-apps"
+      ]
+    },
+    {
+      "slug": "railgun",
+      "name": "Railgun",
+      "description": "WAN optimization between Cloudflare and origin servers (retired)",
+      "categories": [
+        "Application performance"
+      ],
+      "status": "retired",
+      "tags": [
+        "railgun"
+      ]
+    },
+    {
+      "slug": "pub-sub",
+      "name": "Pub/Sub",
+      "description": "MQTT-based messaging on Cloudflare (beta, retired)",
+      "categories": [
+        "Developer platform"
+      ],
+      "status": "retired",
+      "terms": [
+        "Cloudflare Pub/Sub"
+      ]
+    },
+    {
+      "slug": "workers-sites",
+      "name": "Workers Sites",
+      "description": "Static sites served from Workers KV (deprecated in favour of Pages and Workers static assets)",
+      "categories": [
+        "Developer platform"
+      ],
+      "parent": "workers",
+      "status": "retired",
+      "tags": [
+        "workers-sites"
+      ]
+    },
+    {
+      "slug": "amp",
+      "name": "AMP support",
+      "description": "Accelerated Mobile Links and AMP Real URL (retired)",
+      "categories": [
+        "Application performance"
+      ],
+      "status": "retired",
+      "terms": [
+        "AMP Real URL",
+        "Accelerated Mobile Links",
+        "Ampersand"
+      ],
+      "tags": [
+        "amp-tag"
+      ]
+    }
+  ]
+}

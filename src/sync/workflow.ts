@@ -2,6 +2,7 @@ import { WorkflowEntrypoint, type WorkflowEvent, type WorkflowStep } from "cloud
 import { BLOG_ORIGIN, type Env, type FetchJob, type SyncParams } from "../env";
 import { blogFetch, localeOf, parseSitemapIndex, parseUrlset, slugOf } from "./parse";
 import { discoverEndpoint, fallbackSearch, primarySearch } from "../search/semantic";
+import { catalogHealth, PRODUCTS_VERSION, rematchBatch } from "../products";
 
 interface ChildResult {
   discovered: number;
@@ -23,6 +24,8 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
       });
       return { refetch: n };
     }
+    if (event.payload?.rematch) return { rematch: await this.rematchProducts(step, true) };
+
     const startedAt = await step.do("start", async () => {
       const ts = new Date().toISOString();
       await this.env.DB.prepare("INSERT INTO sync_runs (started_at, status) VALUES (?, 'running')").bind(ts).run();
@@ -125,6 +128,20 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
       return { primaryOk, fallbackOk, status };
     });
 
+    // Product links: re-match every post when the deployed catalog or matcher changed (new posts are matched by the consumer).
+    await this.rematchProducts(step, false);
+
+    // Portfolio drift: docs directory vs. the bundled catalog, and new tags no product claims. Never fails the run.
+    await step.do("catalog health", async () => {
+      const h = await catalogHealth(this.env);
+      await this.env.DB.prepare("INSERT INTO settings (key, value, updated_at) VALUES ('catalog_health', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at")
+        .bind(JSON.stringify(h), h.checked_at).run();
+      if (h.error || h.docs_added.length || h.docs_removed.length) {
+        console.error(JSON.stringify({ stage: "catalog", outcome: "ALERT", message: "product catalog drifted from the docs directory: run scripts/build-products.mjs", ...h }));
+      }
+      return { added: h.docs_added.length, removed: h.docs_removed.length, new_tags: h.new_unmapped_tags.length, error: h.error ?? null };
+    });
+
     // Wait for the queue consumer to drain this run's jobs (bounded), then write the report.
     let written = 0;
     if (totals.enqueued > 0) {
@@ -154,5 +171,28 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
       console.log(JSON.stringify({ run_id: runId, stage: "report", outcome: status, ...totals, written, failed }));
       return status;
     });
+  }
+
+  /** Re-match all posts in pages of 100 (one step each, so a failure resumes where it stopped). */
+  private async rematchProducts(step: WorkflowStep, force: boolean): Promise<string> {
+    const needed = await step.do("products version", async () => {
+      const r = await this.env.DB.prepare("SELECT value FROM settings WHERE key = 'products_version'").first<{ value: string }>();
+      return force || r?.value !== PRODUCTS_VERSION;
+    });
+    if (!needed) return `up to date (${PRODUCTS_VERSION})`;
+    let after = 0, posts = 0, links = 0;
+    for (let i = 0; i < 200; i++) {
+      const r = await step.do(`rematch ${i}`, { retries: { limit: 3, delay: "10 seconds", backoff: "exponential" } }, () => rematchBatch(this.env, after, 100));
+      posts += r.n;
+      links += r.links;
+      after = r.last;
+      if (r.n < 100) break;
+    }
+    await step.do("products version set", async () => {
+      await this.env.DB.prepare("INSERT INTO settings (key, value, updated_at) VALUES ('products_version', ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at")
+        .bind(PRODUCTS_VERSION, new Date().toISOString()).run();
+      console.log(JSON.stringify({ stage: "products", outcome: "rematched", version: PRODUCTS_VERSION, posts, links }));
+    });
+    return `rematched ${posts} posts, ${links} links (${PRODUCTS_VERSION})`;
   }
 }

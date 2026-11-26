@@ -43,6 +43,49 @@ Public AI Search endpoint (from `/.well-known/api-catalog`): `POST /search` answ
 | Canary | primary ✓, fallback ✓ → `semantic_status = ok` |
 | Locales dropped in the backfill | 4,428 URLs across 20 locales |
 
+## Product portfolio (2026-11-26)
+
+Browse the Cloudflare portfolio at **`/products`** and see each product's posts at **`/product/<slug>`**.
+
+**Catalog.** `src/products/catalog.json` is built from the [developer docs directory](https://developers.cloudflare.com/directory/) by `npm run products:build`, plus the hand-curated `data/product-overrides.json`. The directory gives 138 entries, each with its groups. Parent/child links come from the URL paths, e.g. `/cloudflare-one/email-security/` → Cloudflare One. The overrides do four things:
+* Drop 10 docs-only entries (Fundamentals, Support, Billing and similar).
+* Add 7 products missing from the directory, 5 of them retired: Railgun, Cloudflare Apps, Workers Sites, Pub/Sub, AMP.
+* Add former names: Argo Tunnel, 2017's "Cloudflare Warp" and `cloudflared` → Cloudflare Tunnel; Area 1 → Email security; Magic WAN → Cloudflare WAN; Magic Firewall → Cloudflare Network Firewall; Browser Rendering → Browser Run; Page Shield → Client-side security; Cloudflare for Teams → Cloudflare One; and so on.
+* Map products to blog tags, and give ordinary-word names qualified match terms: Access, Gateway, Pages, DNS, Queues and others only match as "Cloudflare Access", "Workers KV" and similar.
+
+The result is 136 products in 12 groups. A product sits in every group the docs give it.
+
+**How a post links to a product** (`src/products/match.ts`, stored in D1 `product_posts`):
+
+| Signal | Rule | Shown as |
+|---|---|---|
+| `tag` | The post carries one of the product's blog tags | Posts about the product |
+| `title` | A product term in the title, or in the description with ≥ 3 body mentions | Posts about the product |
+| `body` | ≥ 3 body mentions, or a description mention alone | Collapsed "Also mentioned in" list, most mentions first |
+
+Terms match case-sensitively on word boundaries, with "Cloudflare X", "CloudFlare X" (the pre-2016 spelling) and plural forms added automatically. The longest term wins, so "Workers KV" credits KV and not Workers, and "Workers AI" credits Workers AI. Stop terms consume "Service Worker(s)" and "Web Worker(s)" so they credit nothing.
+
+**Measured on all 3,705 posts** (`npm run products:eval`):
+
+| Measure | Result |
+|---|---|
+| Posts with ≥ 1 strong product link | 2,515 (67.9%); 2,717 with any link |
+| Strong links | 4,246: 3,946 from tags, 300 from titles/descriptions |
+| Text matching beyond tags | R2: 20 → 38 posts; Durable Objects: 41 → 53; KV: 33 → 41 (KV has no `kv` tag at all) |
+| Precision of text-only strong links | 41 / 45 sampled clearly about the product (~90%). Tag links are author-assigned. |
+| Products with ≥ 1 strong post | 118 / 136. The rest are mostly new or docs-only sub-products (Posture checks, DNS Firewall, Pulumi). |
+| product-news posts with no product | 86 / 694, mostly protocols and programs (RPKI, Bandwidth Alliance, QUIC experiments) |
+| Matching cost | ≈ 1.5 ms per post |
+
+**Hierarchy.** A parent page shows its own posts by default, with a toggle to "Include N sub-products" (`?sub=1`). Cloudflare One has 13 sub-products, and rolling them all up by default would bury the posts about Cloudflare One itself. The same toggle scopes "Search within", which goes to `/search?product=…&sub=1`.
+
+**Keeping it current.**
+* The consumer matches every post it writes.
+* The daily workflow compares `settings.products_version` (catalog version + `MATCHER_VERSION`) with the deployed one. When they differ, it re-matches all posts in pages of 100, from what D1 already holds; it doesn't fetch from the blog again. You can also force this with `wrangler workflows trigger blog-library-sync '{"rematch":true}'` or `POST /admin/sync?rematch=1`.
+* The "catalog health" step fetches the docs directory and lists products added to or removed from it, plus new blog tags (first used in the last 45 days) that no product claims. It stores the result in `settings.catalog_health`, shows it on `/products`, and logs an `ALERT` on drift. To fix drift, run `npm run products:build`, review the report, and edit the overrides.
+
+**API.** `/api/products` returns the catalog with counts and health. `/api/products/<slug>?sub=1&include=mentions` returns a product's posts. `/api/posts` and `/api/search` accept `product=`, `sub=1` and `mentions=1`.
+
 ## Architecture
 
 ```
@@ -130,6 +173,7 @@ curl "localhost:8799/ui/?as=intruder@example.com"         # → 403
 
 ```
 migrations/0001_init.sql   D1 schema (FTS5 posts_fts, sync_runs, checked_at for run progress)
+migrations/0003_products.sql  product_posts (post ↔ product links)
 src/index.ts               OAuth provider wiring, cron, queue handlers
 src/app.ts                 UI + JSON API + OAuth consent + admin
 src/auth/access.ts         Cf-Access-Jwt-Assertion verification
@@ -137,6 +181,12 @@ src/sync/{workflow,consumer,parse}.ts   workflow includes the daily canary
 src/search/{data,keyword,semantic,hybrid}.ts   semantic = public endpoint client + fallback parser
 src/mcp/server.ts          M4 add-on: MCP JSON-RPC handler + 3 tools
 src/ui/views.ts            HTML, CSS, manifest, icons
+src/ui/products.ts         /products and /product/<slug> pages
+src/products/              catalog.json (generated), match.ts (pure matcher), directory.ts (docs parser), index.ts (D1 + rematch + drift)
+data/product-overrides.json  hand curation on top of the docs directory
+scripts/build-products.mjs   rebuild the catalog (--check fails if stale)
+scripts/eval-products.mjs    matcher evaluation on the production corpus (read-only)
+scripts/test-products.mjs    matcher + parser unit tests (npm test)
 test/harness.ts            local test harness (not deployed)
 test/known-items.json      20 known posts + 10 questions (scripts/eval.mjs)
 test/fixtures/             raw endpoint responses for the parsers (the canary adds daily ones in R2 ops/fixtures/)

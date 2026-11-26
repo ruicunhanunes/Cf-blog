@@ -34,6 +34,8 @@ export interface SyncParams {
   full?: boolean;
   /** Re-fetch (forced) only these slugs. */
   slugs?: string[];
+  /** Only re-match every post against the product catalog (no crawl). */
+  rematch?: boolean;
 }
 
 export const BLOG_ORIGIN = "https://blog.cloudflare.com";

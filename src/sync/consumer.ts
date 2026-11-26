@@ -1,5 +1,6 @@
 import type { Env, FetchJob } from "../env";
 import { blogFetch, canonicalUrl, parseHtml, parseMarkdown, sha256, yamlString } from "./parse";
+import { matchProducts, productStatements } from "../products";
 
 class PermanentError extends Error {}
 
@@ -126,6 +127,7 @@ export async function processPost(job: FetchJob, env: Env): Promise<string> {
       job.slug, title, description ?? "", tags.map((t) => t.name).join(" "), authors.map((a) => a.name).join(" "), body,
     ),
   );
+  stmts.push(...productStatements(env, job.slug, matchProducts({ title, description, body, tags: tags.map((t) => t.slug) })));
   for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
   return existing ? "updated" : "created";
 }

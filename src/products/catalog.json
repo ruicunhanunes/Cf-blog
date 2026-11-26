@@ -1,0 +1,2868 @@
+{
+ "version": "247a72a545b3",
+ "source": "https://developers.cloudflare.com/directory/",
+ "excluded_paths": [
+  "/api/",
+  "/billing/",
+  "/fundamentals/",
+  "/fundamentals/account/",
+  "/fundamentals/oauth/",
+  "/learning-paths/",
+  "/reference-architecture/",
+  "/resource-tagging/",
+  "/support/",
+  "/version-management/"
+ ],
+ "categories": [
+  "Application performance",
+  "Application security",
+  "Cloudflare One",
+  "Consumer services",
+  "Core platform",
+  "Developer platform",
+  "Network security",
+  "AI",
+  "Analytics",
+  "Media",
+  "Privacy",
+  "Storage"
+ ],
+ "primary_categories": [
+  "Application performance",
+  "Application security",
+  "Cloudflare One",
+  "Consumer services",
+  "Core platform",
+  "Developer platform",
+  "Network security"
+ ],
+ "stop_terms": [
+  "Service Worker",
+  "Service Workers",
+  "Web Worker",
+  "Web Workers",
+  "Shared Worker"
+ ],
+ "products": [
+  {
+   "slug": "1-1-1-1",
+   "name": "1.1.1.1",
+   "description": "A blazing fast DNS resolver built for private browsing",
+   "categories": [
+    "Consumer services",
+    "Network security",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/1.1.1.1/",
+   "docs_path": "/1.1.1.1/",
+   "aliases": [],
+   "terms": [
+    "1.1.1.1"
+   ],
+   "tags": [
+    "1-1-1-1",
+    "doh",
+    "resolver"
+   ]
+  },
+  {
+   "slug": "access",
+   "name": "Access",
+   "description": "Authenticate users for self-hosted, SaaS, and private applications, and log every request",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/access-controls/policies/",
+   "docs_path": "/cloudflare-one/access-controls/policies/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Access",
+    "Zero Trust Access",
+    "Access policy",
+    "Access policies",
+    "Access application",
+    "Access applications"
+   ],
+   "tags": [
+    "access",
+    "cloudflare-access"
+   ]
+  },
+  {
+   "slug": "agent-lee",
+   "name": "Agent Lee",
+   "description": "An AI co-pilot built into the Cloudflare dashboard that helps you navigate, configure, and take actions on Cloudflare services",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/agent-lee/",
+   "docs_path": "/agent-lee/",
+   "aliases": [],
+   "terms": [
+    "Agent Lee"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "agent-memory",
+   "name": "Agent Memory",
+   "description": "Persistent AI-powered memory for agents and applications — automatically extract, classify, and recall knowledge from conversations",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/agent-memory/",
+   "docs_path": "/agent-memory/",
+   "aliases": [],
+   "terms": [
+    "Agent Memory"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "agents",
+   "name": "Agents",
+   "description": "Build AI-powered agents to perform tasks, persist state, browse the web, and communicate in real-time",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/agents/",
+   "docs_path": "/agents/",
+   "aliases": [],
+   "terms": [
+    "Agents SDK",
+    "Cloudflare Agents"
+   ],
+   "tags": [
+    "agents"
+   ]
+  },
+  {
+   "slug": "ai",
+   "name": "AI",
+   "description": "Run AI models on Cloudflare's global network",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ai/",
+   "docs_path": "/ai/",
+   "aliases": [],
+   "terms": [],
+   "tags": [
+    "ai",
+    "artificial-intelligence",
+    "generative-ai",
+    "llm",
+    "machine-learning"
+   ]
+  },
+  {
+   "slug": "ai-controls",
+   "name": "AI controls",
+   "description": "Centralize MCP servers behind a single endpoint and apply Access policies to AI tool traffic",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/",
+   "docs_path": "/cloudflare-one/access-controls/ai-controls/",
+   "aliases": [],
+   "terms": [
+    "AI controls"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "ai-crawl-control",
+   "name": "AI Crawl Control",
+   "description": "Analyze and control third-party AI crawlers in your website",
+   "categories": [
+    "Core platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ai-crawl-control/",
+   "docs_path": "/ai-crawl-control/",
+   "aliases": [
+    "AI Audit",
+    "Pay per crawl",
+    "Pay Per Crawl"
+   ],
+   "terms": [
+    "AI Crawl Control",
+    "AI Audit",
+    "Pay per crawl",
+    "Pay Per Crawl"
+   ],
+   "tags": [
+    "ai-bots",
+    "pay-per-crawl"
+   ]
+  },
+  {
+   "slug": "ai-gateway",
+   "name": "AI Gateway",
+   "description": "Observe and control your AI applications",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ai-gateway/",
+   "docs_path": "/ai-gateway/",
+   "aliases": [],
+   "terms": [
+    "AI Gateway"
+   ],
+   "tags": [
+    "ai-gateway"
+   ]
+  },
+  {
+   "slug": "ai-search",
+   "name": "AI Search",
+   "description": "Create fully managed RAG pipelines for your AI applications",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ai-search/",
+   "docs_path": "/ai-search/",
+   "aliases": [
+    "AutoRAG"
+   ],
+   "terms": [
+    "AI Search",
+    "AutoRAG"
+   ],
+   "tags": [
+    "ai-search",
+    "auto-rag"
+   ]
+  },
+  {
+   "slug": "always-online",
+   "name": "Always Online",
+   "description": "Serve cached copies of pages when the origin is down",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": "cache",
+   "status": "current",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "Always Online"
+   ],
+   "tags": [
+    "always-online"
+   ]
+  },
+  {
+   "slug": "amp",
+   "name": "AMP support",
+   "description": "Accelerated Mobile Links and AMP Real URL (retired)",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "retired",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "AMP Real URL",
+    "Accelerated Mobile Links",
+    "Ampersand"
+   ],
+   "tags": [
+    "amp-tag"
+   ]
+  },
+  {
+   "slug": "analytics",
+   "name": "Analytics",
+   "description": "Visualize the performance, security, and reliability data collected by Cloudflare products",
+   "categories": [
+    "Core platform",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/analytics/",
+   "docs_path": "/analytics/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Analytics"
+   ],
+   "tags": [
+    "analytics"
+   ]
+  },
+  {
+   "slug": "api-shield",
+   "name": "API Shield",
+   "description": "Identify and address your API vulnerabilities",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/api-shield/",
+   "docs_path": "/api-shield/",
+   "aliases": [],
+   "terms": [
+    "API Shield"
+   ],
+   "tags": [
+    "api-gateway",
+    "api-security",
+    "api-shield"
+   ]
+  },
+  {
+   "slug": "argo-smart-routing",
+   "name": "Argo Smart Routing",
+   "description": "Route web traffic across the fastest, most reliable network paths",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/argo-smart-routing/",
+   "docs_path": "/argo-smart-routing/",
+   "aliases": [],
+   "terms": [
+    "Argo Smart Routing",
+    "Argo"
+   ],
+   "tags": [
+    "argo"
+   ]
+  },
+  {
+   "slug": "artifacts",
+   "name": "Artifacts",
+   "description": "Store, version, and share filesystem artifacts across Workers, APIs, and git-compatible tools",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/artifacts/",
+   "docs_path": "/artifacts/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Artifacts"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "automatic-platform-optimization",
+   "name": "Automatic Platform Optimization",
+   "description": "Improve WordPress site performance by serving it from Cloudflare's global network",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/automatic-platform-optimization/",
+   "docs_path": "/automatic-platform-optimization/",
+   "aliases": [],
+   "terms": [
+    "Automatic Platform Optimization",
+    "APO"
+   ],
+   "tags": [
+    "automatic-platform-optimization"
+   ]
+  },
+  {
+   "slug": "basin",
+   "name": "Basin",
+   "description": "Ingest, manage, and query analytics data stored in R2",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/basin/",
+   "docs_path": "/basin/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Basin"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "basin-catalog",
+   "name": "Basin Catalog",
+   "description": "Create, manage, and query Iceberg tables stored in R2",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/basin-catalog/",
+   "docs_path": "/basin-catalog/",
+   "aliases": [
+    "R2 Data Catalog"
+   ],
+   "terms": [
+    "Basin Catalog",
+    "R2 Data Catalog"
+   ],
+   "tags": [
+    "data-catalog"
+   ]
+  },
+  {
+   "slug": "basin-pipelines",
+   "name": "Basin Pipelines",
+   "description": "Ingest real time data streams and load into R2",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/basin-pipelines/",
+   "docs_path": "/basin-pipelines/",
+   "aliases": [
+    "Cloudflare Pipelines"
+   ],
+   "terms": [
+    "Basin Pipelines",
+    "Cloudflare Pipelines"
+   ],
+   "tags": [
+    "pipelines"
+   ]
+  },
+  {
+   "slug": "basin-sql",
+   "name": "Basin SQL",
+   "description": "Cloudflare's serverless, distributed query engine for data stored in Basin Catalog",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/basin-sql/",
+   "docs_path": "/basin-sql/",
+   "aliases": [
+    "R2 SQL"
+   ],
+   "terms": [
+    "Basin SQL",
+    "R2 SQL"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "bots",
+   "name": "Bots",
+   "description": "Protect your domain from bad bot traffic",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/bots/",
+   "docs_path": "/bots/",
+   "aliases": [],
+   "terms": [
+    "Bot Management",
+    "Bot Fight Mode",
+    "Super Bot Fight Mode"
+   ],
+   "tags": [
+    "bot-management",
+    "bots"
+   ]
+  },
+  {
+   "slug": "browser-isolation",
+   "name": "Browser Isolation",
+   "description": "Execute active webpage content in a secure, isolated browser",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/",
+   "docs_path": "/cloudflare-one/remote-browser-isolation/",
+   "aliases": [
+    "Remote Browser Isolation"
+   ],
+   "terms": [
+    "Browser Isolation",
+    "Remote Browser Isolation"
+   ],
+   "tags": [
+    "remote-browser-isolation"
+   ]
+  },
+  {
+   "slug": "browser-run",
+   "name": "Browser Run",
+   "description": "Control and interact with headless browser instances programmatically",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/browser-run/",
+   "docs_path": "/browser-run/",
+   "aliases": [
+    "Browser Rendering"
+   ],
+   "terms": [
+    "Browser Run",
+    "Browser Rendering"
+   ],
+   "tags": [
+    "browser-rendering",
+    "browser-run"
+   ]
+  },
+  {
+   "slug": "byoip",
+   "name": "BYOIP",
+   "description": "Get Cloudflare's security and performance while using your own IPs",
+   "categories": [
+    "Network security",
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/byoip/",
+   "docs_path": "/byoip/",
+   "aliases": [],
+   "terms": [
+    "BYOIP"
+   ],
+   "tags": [
+    "byoip"
+   ]
+  },
+  {
+   "slug": "cache",
+   "name": "Cache",
+   "description": "Make websites faster by caching content across our global server network",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cache/",
+   "docs_path": "/cache/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare CDN",
+    "Cache Rules",
+    "Tiered Cache",
+    "Argo Tiered Cache"
+   ],
+   "tags": [
+    "cache",
+    "cache-rules",
+    "cdn",
+    "crawler-hints",
+    "tiered-cache"
+   ]
+  },
+  {
+   "slug": "cache-reserve",
+   "name": "Cache Reserve",
+   "description": "Cache your website content on a persistent data store",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": "cache",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cache/advanced-configuration/cache-reserve/",
+   "docs_path": "/cache/advanced-configuration/cache-reserve/",
+   "aliases": [],
+   "terms": [
+    "Cache Reserve"
+   ],
+   "tags": [
+    "cache-reserve"
+   ]
+  },
+  {
+   "slug": "casb",
+   "name": "CASB",
+   "description": "Scan SaaS applications and cloud environments for data security issues",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/",
+   "docs_path": "/cloudflare-one/integrations/cloud-and-saas/",
+   "aliases": [],
+   "terms": [
+    "CASB"
+   ],
+   "tags": [
+    "casb"
+   ]
+  },
+  {
+   "slug": "cdnjs",
+   "name": "cdnjs",
+   "description": "Free, open-source CDN for JavaScript libraries",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "cdnjs",
+    "CDNJS"
+   ],
+   "tags": [
+    "cdnjs"
+   ]
+  },
+  {
+   "slug": "challenges",
+   "name": "Challenges",
+   "description": "Verify visitors are not bots with lightweight challenges",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-challenges/",
+   "docs_path": "/cloudflare-challenges/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Challenges",
+    "Managed Challenge",
+    "Managed Challenges"
+   ],
+   "tags": [
+    "captcha"
+   ]
+  },
+  {
+   "slug": "china-network",
+   "name": "China Network",
+   "description": "Fast, global network serving visitors inside and outside of China",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/china-network/",
+   "docs_path": "/china-network/",
+   "aliases": [],
+   "terms": [
+    "China Network"
+   ],
+   "tags": [
+    "china-network"
+   ]
+  },
+  {
+   "slug": "client-side-security",
+   "name": "Client-side security",
+   "description": "Provide client-side protection for your website visitors",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/client-side-security/",
+   "docs_path": "/client-side-security/",
+   "aliases": [
+    "Page Shield"
+   ],
+   "terms": [
+    "Client-side security",
+    "Page Shield",
+    "Client-Side Security"
+   ],
+   "tags": [
+    "client-side-security",
+    "page-shield"
+   ]
+  },
+  {
+   "slug": "cloud-workload-security",
+   "name": "Cloud Workload Security",
+   "description": "Apply request-level policies to cloud API traffic through a proxy in your environment",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/cloud-workload-security/",
+   "docs_path": "/cloudflare-one/cloud-workload-security/",
+   "aliases": [],
+   "terms": [
+    "Cloud Workload Security"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-apps",
+   "name": "Cloudflare Apps",
+   "description": "Marketplace of apps installable on Cloudflare sites (retired)",
+   "categories": [
+    "Core platform"
+   ],
+   "parent": null,
+   "status": "retired",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "Cloudflare Apps"
+   ],
+   "tags": [
+    "cloudflare-apps"
+   ]
+  },
+  {
+   "slug": "cloudflare-cli",
+   "name": "Cloudflare CLI",
+   "description": "Manage Cloudflare resources from one command-line interface",
+   "categories": [
+    "Core platform",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cf/",
+   "docs_path": "/cf/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare CLI"
+   ],
+   "tags": [
+    "cli"
+   ]
+  },
+  {
+   "slug": "cloudflare-for-platforms",
+   "name": "Cloudflare for Platforms",
+   "description": "Build your own multi-tenant platform using Cloudflare as infrastructure",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-for-platforms/",
+   "docs_path": "/cloudflare-for-platforms/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare for Platforms"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-for-saas",
+   "name": "Cloudflare for SaaS",
+   "description": "Extend Cloudflare's security and performance to your customers",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": "cloudflare-for-platforms",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/",
+   "docs_path": "/cloudflare-for-platforms/cloudflare-for-saas/",
+   "aliases": [
+    "SSL for SaaS"
+   ],
+   "terms": [
+    "Cloudflare for SaaS",
+    "SSL for SaaS"
+   ],
+   "tags": [
+    "cloudflare-for-saas"
+   ]
+  },
+  {
+   "slug": "cloudflare-images",
+   "name": "Cloudflare Images",
+   "description": "Store, transform, optimize, and deliver images at scale",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/images/",
+   "docs_path": "/images/",
+   "aliases": [
+    "Image Resizing"
+   ],
+   "terms": [
+    "Cloudflare Images",
+    "Image Resizing"
+   ],
+   "tags": [
+    "cloudflare-images",
+    "image-optimization",
+    "image-resizing"
+   ]
+  },
+  {
+   "slug": "cloudflare-mesh",
+   "name": "Cloudflare Mesh",
+   "description": "Connect services and devices with post-quantum encrypted mesh networking",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/mesh/",
+   "docs_path": "/mesh/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Mesh"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-network-firewall",
+   "name": "Cloudflare Network Firewall",
+   "description": "Protect your enterprise network with advanced firewall-as-a-service protection",
+   "categories": [
+    "Cloudflare One",
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-network-firewall/",
+   "docs_path": "/cloudflare-network-firewall/",
+   "aliases": [
+    "Magic Firewall"
+   ],
+   "terms": [
+    "Cloudflare Network Firewall",
+    "Magic Firewall"
+   ],
+   "tags": [
+    "magic-firewall"
+   ]
+  },
+  {
+   "slug": "cloudflare-observability",
+   "name": "Cloudflare Observability",
+   "description": "Find Cloudflare documentation for logs, traces, analytics, alerts, telemetry export, and dashboards",
+   "categories": [
+    "Core platform",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/observability/",
+   "docs_path": "/observability/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Observability",
+    "Workers Observability"
+   ],
+   "tags": [
+    "observability"
+   ]
+  },
+  {
+   "slug": "cloudflare-ohttp-relay",
+   "name": "Cloudflare OHTTP Relay",
+   "description": "Implement the Oblivious HTTP IETF standard to improve client privacy",
+   "categories": [
+    "Developer platform",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ohttp-relay/",
+   "docs_path": "/ohttp-relay/",
+   "aliases": [
+    "Privacy Gateway",
+    "Oblivious HTTP"
+   ],
+   "terms": [
+    "Cloudflare OHTTP Relay",
+    "Privacy Gateway",
+    "Oblivious HTTP"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-one",
+   "name": "Cloudflare One",
+   "description": "Replace legacy security perimeters with Cloudflare's network to protect your organization",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/",
+   "docs_path": "/cloudflare-one/",
+   "aliases": [
+    "Cloudflare for Teams",
+    "Cloudflare Zero Trust"
+   ],
+   "terms": [
+    "Cloudflare One",
+    "Cloudflare for Teams",
+    "Cloudflare Zero Trust"
+   ],
+   "tags": [
+    "cloudflare-one",
+    "cloudflare-zero-trust",
+    "private-network",
+    "sase",
+    "teams-dashboard",
+    "zero-trust"
+   ]
+  },
+  {
+   "slug": "cloudflare-one-appliance",
+   "name": "Cloudflare One Appliance",
+   "description": "Connect branch sites to Cloudflare One with a managed hardware or virtual appliance",
+   "categories": [
+    "Cloudflare One",
+    "Network security"
+   ],
+   "parent": "cloudflare-wan",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/",
+   "docs_path": "/cloudflare-wan/configuration/appliance/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare One Appliance"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-one-client",
+   "name": "Cloudflare One Client",
+   "description": "Send device traffic to Cloudflare and report device health for posture checks (formerly WARP)",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/",
+   "docs_path": "/cloudflare-one/team-and-resources/devices/cloudflare-one-client/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare One Client"
+   ],
+   "tags": [
+    "cloudflare-one-client"
+   ]
+  },
+  {
+   "slug": "cloudflare-tunnel",
+   "name": "Cloudflare Tunnel",
+   "description": "Connect your origin servers, APIs, and services to Cloudflare without a publicly routable IP address",
+   "categories": [
+    "Core platform",
+    "Network security",
+    "Application security",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/tunnel/",
+   "docs_path": "/tunnel/",
+   "aliases": [
+    "Argo Tunnel",
+    "Cloudflare Warp"
+   ],
+   "terms": [
+    "Cloudflare Tunnel",
+    "Argo Tunnel",
+    "Cloudflare Warp",
+    "cloudflared"
+   ],
+   "tags": [
+    "cloudflare-tunnel",
+    "warp"
+   ]
+  },
+  {
+   "slug": "cloudflare-tunnel-for-sase",
+   "name": "Cloudflare Tunnel for SASE",
+   "description": "Connect private networks to Cloudflare with outbound-only tunnels, without exposing a public IP",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+   "docs_path": "/cloudflare-one/networks/connectors/cloudflare-tunnel/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Tunnel for SASE"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-wallets",
+   "name": "Cloudflare Wallets",
+   "description": "Reserve a wallet handle and give your account and its agents a stable, human-readable identity for agentic payments",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/wallets/",
+   "docs_path": "/wallets/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Wallets"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudflare-wan",
+   "name": "Cloudflare WAN",
+   "description": "Replace legacy WAN and securely connect any traffic source to Cloudflare's network",
+   "categories": [
+    "Cloudflare One",
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-wan/",
+   "docs_path": "/cloudflare-wan/",
+   "aliases": [
+    "Magic WAN"
+   ],
+   "terms": [
+    "Cloudflare WAN",
+    "Magic WAN"
+   ],
+   "tags": [
+    "magic-wan"
+   ]
+  },
+  {
+   "slug": "cloudflare-web-analytics",
+   "name": "Cloudflare Web Analytics",
+   "description": "Get vital web analytics for your website",
+   "categories": [
+    "Application performance",
+    "Analytics",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/web-analytics/",
+   "docs_path": "/web-analytics/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Web Analytics",
+    "Web Analytics"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "cloudforce-one",
+   "name": "Cloudforce One",
+   "description": "Threat intelligence and threat operations team and products",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "Cloudforce One"
+   ],
+   "tags": [
+    "cloudforce-one",
+    "threat-intelligence"
+   ]
+  },
+  {
+   "slug": "containers",
+   "name": "Containers",
+   "description": "Enhance your Workers with serverless containers",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/containers/",
+   "docs_path": "/containers/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Containers"
+   ],
+   "tags": [
+    "containers"
+   ]
+  },
+  {
+   "slug": "d1",
+   "name": "D1",
+   "description": "Create managed, serverless databases with SQL semantics",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/d1/",
+   "docs_path": "/d1/",
+   "aliases": [],
+   "terms": [
+    "D1"
+   ],
+   "tags": [
+    "d1"
+   ]
+  },
+  {
+   "slug": "data-localization-suite",
+   "name": "Data Localization Suite",
+   "description": "Control where Cloudflare stores and inspects data",
+   "categories": [
+    "Cloudflare One",
+    "Analytics",
+    "Application performance",
+    "Application security",
+    "Developer platform",
+    "Network security",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/data-localization/",
+   "docs_path": "/data-localization/",
+   "aliases": [
+    "Regional Services"
+   ],
+   "terms": [
+    "Data Localization Suite",
+    "Regional Services"
+   ],
+   "tags": [
+    "data-localization-suite",
+    "regional-services"
+   ]
+  },
+  {
+   "slug": "data-loss-prevention",
+   "name": "Data Loss Prevention",
+   "description": "Scan your web traffic and SaaS applications for sensitive data",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/",
+   "docs_path": "/cloudflare-one/data-loss-prevention/",
+   "aliases": [],
+   "terms": [
+    "Data Loss Prevention",
+    "DLP"
+   ],
+   "tags": [
+    "data-loss-prevention",
+    "dlp"
+   ]
+  },
+  {
+   "slug": "ddos-protection",
+   "name": "DDoS Protection",
+   "description": "Protect against DDoS attacks automatically with uncompromised performance",
+   "categories": [
+    "Application security",
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ddos-protection/",
+   "docs_path": "/ddos-protection/",
+   "aliases": [],
+   "terms": [
+    "DDoS Protection"
+   ],
+   "tags": [
+    "advanced-ddos",
+    "ddos"
+   ]
+  },
+  {
+   "slug": "digital-experience-monitoring",
+   "name": "Digital Experience Monitoring",
+   "description": "Monitor device, network, and application health across your Zero Trust organization",
+   "categories": [
+    "Cloudflare One",
+    "Analytics"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/insights/dex/",
+   "docs_path": "/cloudflare-one/insights/dex/",
+   "aliases": [],
+   "terms": [
+    "Digital Experience Monitoring",
+    "DEX"
+   ],
+   "tags": [
+    "dex",
+    "digital-experience-monitoring"
+   ]
+  },
+  {
+   "slug": "dmarc-management",
+   "name": "DMARC Management",
+   "description": "Protect your email domain and stop brand impersonation",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/dmarc-management/",
+   "docs_path": "/dmarc-management/",
+   "aliases": [],
+   "terms": [
+    "DMARC Management"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "dns",
+   "name": "DNS",
+   "description": "Deliver excellent performance and reliability to your domain",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/dns/",
+   "docs_path": "/dns/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare DNS",
+    "Authoritative DNS",
+    "Foundation DNS",
+    "Secondary DNS",
+    "DNSSEC"
+   ],
+   "tags": [
+    "dns",
+    "dnssec"
+   ]
+  },
+  {
+   "slug": "dns-firewall",
+   "name": "DNS Firewall",
+   "description": "Speed up and protect entire authoritative nameservers",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": "dns",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/dns/dns-firewall/",
+   "docs_path": "/dns/dns-firewall/",
+   "aliases": [],
+   "terms": [
+    "DNS Firewall"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "durable-objects",
+   "name": "Durable Objects",
+   "description": "A special kind of Cloudflare Worker combining compute with storage",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/durable-objects/",
+   "docs_path": "/durable-objects/",
+   "aliases": [],
+   "terms": [
+    "Durable Objects",
+    "Durable Object"
+   ],
+   "tags": [
+    "durable-objects"
+   ]
+  },
+  {
+   "slug": "dynamic-workers",
+   "name": "Dynamic Workers",
+   "description": "Spin up isolated Workers on demand to execute code",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/dynamic-workers/",
+   "docs_path": "/dynamic-workers/",
+   "aliases": [],
+   "terms": [
+    "Dynamic Workers"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "email-security",
+   "name": "Email security",
+   "description": "Detect and block phishing, malware, and impersonation across inbound and outbound email",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/email-security/",
+   "docs_path": "/cloudflare-one/email-security/",
+   "aliases": [
+    "Area 1",
+    "Area 1 Security",
+    "Cloud Email Security"
+   ],
+   "terms": [
+    "Email security",
+    "Area 1",
+    "Area 1 Security",
+    "Cloud Email Security"
+   ],
+   "tags": [
+    "area-1-security",
+    "cloud-email-security",
+    "cloudflare-area-1",
+    "email-security"
+   ]
+  },
+  {
+   "slug": "email-service",
+   "name": "Email Service",
+   "description": "Send transactional emails at scale with Cloudflare Email Service",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/email-service/",
+   "docs_path": "/email-service/",
+   "aliases": [
+    "Email Routing",
+    "Email Workers"
+   ],
+   "terms": [
+    "Email Service",
+    "Email Routing",
+    "Email Workers"
+   ],
+   "tags": [
+    "cloudflare-email-services",
+    "email-routing",
+    "email-workers"
+   ]
+  },
+  {
+   "slug": "flagship",
+   "name": "Flagship",
+   "description": "Feature flags evaluated at the edge for Cloudflare Workers",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/flagship/",
+   "docs_path": "/flagship/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Flagship"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "fraud-detection",
+   "name": "Fraud Detection",
+   "description": "Sequence rules use cookies to track the order and timing of requests",
+   "categories": [
+    "Application security"
+   ],
+   "parent": "bots",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/bots/additional-configurations/sequence-rules/",
+   "docs_path": "/bots/additional-configurations/sequence-rules/",
+   "aliases": [],
+   "terms": [
+    "Fraud Detection"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "gateway",
+   "name": "Gateway",
+   "description": "Set up policies to inspect DNS, Network, HTTP, and Egress traffic",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/traffic-controls/",
+   "docs_path": "/cloudflare-one/traffic-controls/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Gateway",
+    "Secure Web Gateway"
+   ],
+   "tags": [
+    "dns-filtering",
+    "gateway",
+    "secure-web-gateway"
+   ]
+  },
+  {
+   "slug": "geo-key-manager",
+   "name": "Geo Key Manager",
+   "description": "Control SSL/TLS key storage for compliance and security",
+   "categories": [
+    "Application security"
+   ],
+   "parent": "ssl-tls",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ssl/edge-certificates/geokey-manager/",
+   "docs_path": "/ssl/edge-certificates/geokey-manager/",
+   "aliases": [],
+   "terms": [
+    "Geo Key Manager"
+   ],
+   "tags": [
+    "geo-key-manager"
+   ]
+  },
+  {
+   "slug": "google-tag-gateway-for-advertisers",
+   "name": "Google tag gateway for advertisers",
+   "description": "Add a layer of data security and privacy controls when using Google Tag Manager",
+   "categories": [
+    "Application performance",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/google-tag-gateway/",
+   "docs_path": "/google-tag-gateway/",
+   "aliases": [],
+   "terms": [
+    "Google tag gateway for advertisers"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "graphql-analytics-api",
+   "name": "GraphQL Analytics API",
+   "description": "Access data on HTTP requests and Cloudflare products",
+   "categories": [
+    "Core platform",
+    "Analytics"
+   ],
+   "parent": "analytics",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/analytics/graphql-api/",
+   "docs_path": "/analytics/graphql-api/",
+   "aliases": [],
+   "terms": [
+    "GraphQL Analytics API",
+    "GraphQL Analytics"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "health-checks",
+   "name": "Health Checks",
+   "description": "Monitor IPs or hostnames and get notified of issues",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/health-checks/",
+   "docs_path": "/health-checks/",
+   "aliases": [],
+   "terms": [
+    "Health Checks"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "hyperdrive",
+   "name": "Hyperdrive",
+   "description": "Accelerate database queries to make databases fast globally",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/hyperdrive/",
+   "docs_path": "/hyperdrive/",
+   "aliases": [],
+   "terms": [
+    "Hyperdrive"
+   ],
+   "tags": [
+    "hyperdrive"
+   ]
+  },
+  {
+   "slug": "internal-dns",
+   "name": "Internal DNS",
+   "description": "Simplify private network management with Cloudflare DNS for internal resources",
+   "categories": [
+    "Application performance",
+    "Cloudflare One"
+   ],
+   "parent": "dns",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/dns/internal-dns/",
+   "docs_path": "/dns/internal-dns/",
+   "aliases": [],
+   "terms": [
+    "Internal DNS"
+   ],
+   "tags": [
+    "internal-dns"
+   ]
+  },
+  {
+   "slug": "k2",
+   "name": "K2",
+   "description": "A durable event stream",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/k2/",
+   "docs_path": "/k2/",
+   "aliases": [],
+   "terms": [
+    "K2"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "key-transparency-auditor",
+   "name": "Key Transparency Auditor",
+   "description": "Secure the distribution of public keys in E2EE messaging systems",
+   "categories": [
+    "Application security",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/key-transparency/",
+   "docs_path": "/key-transparency/",
+   "aliases": [],
+   "terms": [
+    "Key Transparency Auditor",
+    "Key Transparency"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "keyless-ssl",
+   "name": "Keyless SSL",
+   "description": "Use Cloudflare SSL while keeping exclusive access to your private keys",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": "ssl-tls",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ssl/keyless-ssl/",
+   "docs_path": "/ssl/keyless-ssl/",
+   "aliases": [],
+   "terms": [
+    "Keyless SSL"
+   ],
+   "tags": [
+    "keyless-ssl"
+   ]
+  },
+  {
+   "slug": "kv",
+   "name": "KV",
+   "description": "Global, low-latency, key-value data storage",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/kv/",
+   "docs_path": "/kv/",
+   "aliases": [],
+   "terms": [
+    "Workers KV",
+    "KV namespace",
+    "KV namespaces"
+   ],
+   "tags": [
+    "cloudflare-workers-kv"
+   ]
+  },
+  {
+   "slug": "leaked-credentials-detection",
+   "name": "Leaked credentials detection",
+   "description": "Detect previously leaked credentials in incoming requests",
+   "categories": [
+    "Application security"
+   ],
+   "parent": "waf",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/waf/detections/leaked-credentials/",
+   "docs_path": "/waf/detections/leaked-credentials/",
+   "aliases": [],
+   "terms": [
+    "Leaked credentials detection",
+    "Leaked Credentials Detection",
+    "leaked credentials detection"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "load-balancing",
+   "name": "Load Balancing",
+   "description": "Maximize application performance and availability",
+   "categories": [
+    "Application performance",
+    "Cloudflare One"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/load-balancing/",
+   "docs_path": "/load-balancing/",
+   "aliases": [],
+   "terms": [
+    "Load Balancing",
+    "Load Balancer"
+   ],
+   "tags": [
+    "loadbalancing"
+   ]
+  },
+  {
+   "slug": "log-explorer",
+   "name": "Log Explorer",
+   "description": "Store and explore your logs in the Cloudflare dashboard or API",
+   "categories": [
+    "Core platform",
+    "Analytics"
+   ],
+   "parent": "cloudflare-observability",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/observability/logs/log-explorer/",
+   "docs_path": "/observability/logs/log-explorer/",
+   "aliases": [],
+   "terms": [
+    "Log Explorer"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "logs",
+   "name": "Logs",
+   "description": "Access detailed logs with metadata from Cloudflare products",
+   "categories": [
+    "Core platform",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/logs/",
+   "docs_path": "/logs/",
+   "aliases": [],
+   "terms": [
+    "Logpush",
+    "Logpull",
+    "Instant Logs",
+    "Cloudflare Logs"
+   ],
+   "tags": [
+    "logs"
+   ]
+  },
+  {
+   "slug": "magic-transit",
+   "name": "Magic Transit",
+   "description": "Network functions at Cloudflare scale for on-premise, cloud-hosted, and hybrid networks",
+   "categories": [
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/magic-transit/",
+   "docs_path": "/magic-transit/",
+   "aliases": [],
+   "terms": [
+    "Magic Transit"
+   ],
+   "tags": [
+    "magic-transit"
+   ]
+  },
+  {
+   "slug": "monetization-gateway",
+   "name": "Monetization Gateway",
+   "description": "Define monetization policies to charge any visitor accessing APIs, MCP tools, web pages, or datasets.",
+   "categories": [
+    "Core platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/monetization-gateway/",
+   "docs_path": "/monetization-gateway/",
+   "aliases": [],
+   "terms": [
+    "Monetization Gateway"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "moq",
+   "name": "MoQ",
+   "description": "Protocol for live media",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/moq/",
+   "docs_path": "/moq/",
+   "aliases": [
+    "Media over QUIC"
+   ],
+   "terms": [
+    "MoQ",
+    "Media over QUIC"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "network",
+   "name": "Network",
+   "description": "Manage Cloudflare network settings for your website",
+   "categories": [
+    "Core platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/network/",
+   "docs_path": "/network/",
+   "aliases": [],
+   "terms": [
+    "WebSockets",
+    "HTTP/2",
+    "HTTP/3",
+    "QUIC",
+    "IPv6",
+    "gRPC",
+    "Onion Routing",
+    "Pseudo IPv4",
+    "0-RTT"
+   ],
+   "tags": [
+    "http2",
+    "http3",
+    "ipv6",
+    "quic",
+    "spdy"
+   ]
+  },
+  {
+   "slug": "network-error-logging",
+   "name": "Network Error Logging",
+   "description": "Review connectivity issues to learn when and where an incident is happening and its impact",
+   "categories": [
+    "Network security",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/network-error-logging/",
+   "docs_path": "/network-error-logging/",
+   "aliases": [],
+   "terms": [
+    "Network Error Logging"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "network-flow",
+   "name": "Network Flow",
+   "description": "Visibility into your network and cloud traffic by analyzing network flow data",
+   "categories": [
+    "Network security",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/network-flow/",
+   "docs_path": "/network-flow/",
+   "aliases": [
+    "Magic Network Monitoring"
+   ],
+   "terms": [
+    "Network Flow",
+    "Magic Network Monitoring"
+   ],
+   "tags": [
+    "magic-network-monitoring"
+   ]
+  },
+  {
+   "slug": "network-interconnect",
+   "name": "Network Interconnect",
+   "description": "Faster, more reliable, and more secure than connecting over the Internet",
+   "categories": [
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/network-interconnect/",
+   "docs_path": "/network-interconnect/",
+   "aliases": [],
+   "terms": [
+    "Network Interconnect"
+   ],
+   "tags": [
+    "network-interconnect"
+   ]
+  },
+  {
+   "slug": "network-visibility",
+   "name": "Network visibility",
+   "description": "Record and analyze raw network traffic with packet captures to diagnose connectivity and security issues",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/",
+   "docs_path": "/cloudflare-one/insights/network-visibility/",
+   "aliases": [],
+   "terms": [
+    "Network visibility"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "notifications",
+   "name": "Notifications",
+   "description": "Define what you want to be notified about and how",
+   "categories": [
+    "Core platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/notifications/",
+   "docs_path": "/notifications/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Notifications"
+   ],
+   "tags": [
+    "notifications"
+   ]
+  },
+  {
+   "slug": "pages",
+   "name": "Pages",
+   "description": "Build full-stack, serverless applications globally with minimal configuration",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/pages/",
+   "docs_path": "/pages/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Pages",
+    "Pages Functions"
+   ],
+   "tags": [
+    "cloudflare-pages"
+   ]
+  },
+  {
+   "slug": "posture-checks",
+   "name": "Posture checks",
+   "description": "Require a managed or healthy device before granting access, using Cloudflare One Client and third-party signals",
+   "categories": [
+    "Cloudflare One"
+   ],
+   "parent": "cloudflare-one",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/",
+   "docs_path": "/cloudflare-one/reusable-components/posture-checks/",
+   "aliases": [],
+   "terms": [
+    "Posture checks"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "privacy-pass",
+   "name": "Privacy Pass",
+   "description": "Privacy Pass tokens let users prove a claim without revealing their identity or being tracked across requests.",
+   "categories": [
+    "Developer platform",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/privacy-pass/",
+   "docs_path": "/privacy-pass/",
+   "aliases": [],
+   "terms": [
+    "Privacy Pass"
+   ],
+   "tags": [
+    "privacy-pass"
+   ]
+  },
+  {
+   "slug": "privacy-proxy",
+   "name": "Privacy Proxy",
+   "description": "A MASQUE-based forward proxy that protects user privacy while preserving geolocation accuracy",
+   "categories": [
+    "Developer platform",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/privacy-proxy/",
+   "docs_path": "/privacy-proxy/",
+   "aliases": [],
+   "terms": [
+    "Privacy Proxy"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "pub-sub",
+   "name": "Pub/Sub",
+   "description": "MQTT-based messaging on Cloudflare (beta, retired)",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "retired",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "Cloudflare Pub/Sub"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "public-to-private",
+   "name": "Public to private",
+   "description": "Proxy public hostnames to origins on your private network",
+   "categories": [
+    "Application performance",
+    "Cloudflare One"
+   ],
+   "parent": "dns",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/dns/private-origins/",
+   "docs_path": "/dns/private-origins/",
+   "aliases": [],
+   "terms": [
+    "Public to private"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "pulumi",
+   "name": "Pulumi",
+   "description": "Create, deploy, and manage Cloudflare resources in various programming languages",
+   "categories": [
+    "Core platform",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/pulumi/",
+   "docs_path": "/pulumi/",
+   "aliases": [],
+   "terms": [
+    "Pulumi"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "queues",
+   "name": "Queues",
+   "description": "Reliably send and receive messages without the egress fees",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/queues/",
+   "docs_path": "/queues/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Queues"
+   ],
+   "tags": [
+    "cloudflare-queues",
+    "queues"
+   ]
+  },
+  {
+   "slug": "r2",
+   "name": "R2",
+   "description": "Store large amounts of unstructured data without egress fees",
+   "categories": [
+    "Developer platform",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/r2/",
+   "docs_path": "/r2/",
+   "aliases": [],
+   "terms": [
+    "R2"
+   ],
+   "tags": [
+    "r2"
+   ]
+  },
+  {
+   "slug": "radar",
+   "name": "Radar",
+   "description": "Investigate Internet usage around the world using Cloudflare's data",
+   "categories": [
+    "Consumer services",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/radar/",
+   "docs_path": "/radar/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Radar"
+   ],
+   "tags": [
+    "cloudflare-radar"
+   ]
+  },
+  {
+   "slug": "railgun",
+   "name": "Railgun",
+   "description": "WAN optimization between Cloudflare and origin servers (retired)",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "retired",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "Railgun"
+   ],
+   "tags": [
+    "railgun"
+   ]
+  },
+  {
+   "slug": "randomness-beacon",
+   "name": "Randomness Beacon",
+   "description": "Explore drand, a distributed service providing randomness to applications",
+   "categories": [
+    "Core platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/randomness-beacon/",
+   "docs_path": "/randomness-beacon/",
+   "aliases": [
+    "League of Entropy",
+    "drand"
+   ],
+   "terms": [
+    "Randomness Beacon",
+    "League of Entropy",
+    "drand"
+   ],
+   "tags": [
+    "lavarand"
+   ]
+  },
+  {
+   "slug": "rate-limiting",
+   "name": "Rate limiting",
+   "description": "Control the rate of incoming requests matching an expression",
+   "categories": [
+    "Application security"
+   ],
+   "parent": "waf",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/waf/rate-limiting-rules/",
+   "docs_path": "/waf/rate-limiting-rules/",
+   "aliases": [],
+   "terms": [
+    "Rate limiting",
+    "Rate Limiting Rules"
+   ],
+   "tags": [
+    "rate-limiting"
+   ]
+  },
+  {
+   "slug": "realtime",
+   "name": "Realtime",
+   "description": "RealtimeKit, SFU and TURN",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/realtime/",
+   "docs_path": "/realtime/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Realtime",
+    "Cloudflare Calls"
+   ],
+   "tags": [
+    "cloudflare-calls",
+    "cloudflare-realtime"
+   ]
+  },
+  {
+   "slug": "realtime-sfu",
+   "name": "Realtime SFU",
+   "description": "Infrastructure for real-time serverless video, audio, and data applications",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": "realtime",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/realtime/sfu/",
+   "docs_path": "/realtime/sfu/",
+   "aliases": [],
+   "terms": [
+    "Realtime SFU"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "realtimekit",
+   "name": "RealtimeKit",
+   "description": "SDKs and APIs to build real-time applications with lowest latency at any scale",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": "realtime",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/realtime/realtimekit/",
+   "docs_path": "/realtime/realtimekit/",
+   "aliases": [],
+   "terms": [
+    "RealtimeKit"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "registrar",
+   "name": "Registrar",
+   "description": "Buy and renew your domain at cost, add another layer of security to your DNS records for free",
+   "categories": [
+    "Core platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/registrar/",
+   "docs_path": "/registrar/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Registrar",
+    "Registrar"
+   ],
+   "tags": [
+    "registrar"
+   ]
+  },
+  {
+   "slug": "rules",
+   "name": "Rules",
+   "description": "Modify incoming requests, change Cloudflare settings, or trigger actions",
+   "categories": [
+    "Core platform",
+    "Application performance",
+    "Application security",
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/rules/",
+   "docs_path": "/rules/",
+   "aliases": [],
+   "terms": [
+    "Page Rules",
+    "Transform Rules",
+    "Configuration Rules",
+    "Origin Rules",
+    "Redirect Rules",
+    "Cloudflare Snippets"
+   ],
+   "tags": [
+    "edge-rules",
+    "page-rules",
+    "transform-rules"
+   ]
+  },
+  {
+   "slug": "ruleset-engine",
+   "name": "Ruleset Engine",
+   "description": "Create rulesets and rules for different Cloudflare products",
+   "categories": [
+    "Core platform",
+    "Application performance",
+    "Application security",
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ruleset-engine/",
+   "docs_path": "/ruleset-engine/",
+   "aliases": [],
+   "terms": [
+    "Ruleset Engine",
+    "Rulesets API"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "sandboxes",
+   "name": "Sandboxes",
+   "description": "Isolated execution on Cloudflare using Containers and Dynamic Workers",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/sandbox/",
+   "docs_path": "/sandbox/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Sandbox",
+    "Sandbox SDK"
+   ],
+   "tags": [
+    "sandbox"
+   ]
+  },
+  {
+   "slug": "secrets-store",
+   "name": "Secrets Store",
+   "description": "Encrypt and store sensitive information as secrets that are securely reusable across an account",
+   "categories": [
+    "Application security",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/secrets-store/",
+   "docs_path": "/secrets-store/",
+   "aliases": [],
+   "terms": [
+    "Secrets Store"
+   ],
+   "tags": [
+    "secrets-store"
+   ]
+  },
+  {
+   "slug": "security-center",
+   "name": "Security Center",
+   "description": "Enhance your security posture with a range of security products and one-click solutions",
+   "categories": [
+    "Application security",
+    "Analytics"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/security-center/",
+   "docs_path": "/security-center/",
+   "aliases": [],
+   "terms": [
+    "Security Center"
+   ],
+   "tags": [
+    "security-center"
+   ]
+  },
+  {
+   "slug": "smart-shield",
+   "name": "Smart Shield",
+   "description": "Safeguard your origin with just a few clicks.",
+   "categories": [
+    "Application performance",
+    "Application security",
+    "Network security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/smart-shield/",
+   "docs_path": "/smart-shield/",
+   "aliases": [],
+   "terms": [
+    "Smart Shield"
+   ],
+   "tags": [
+    "smart-shield"
+   ]
+  },
+  {
+   "slug": "spectrum",
+   "name": "Spectrum",
+   "description": "Secure and accelerate any TCP or UDP-based application",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/spectrum/",
+   "docs_path": "/spectrum/",
+   "aliases": [],
+   "terms": [
+    "Spectrum"
+   ],
+   "tags": [
+    "spectrum"
+   ]
+  },
+  {
+   "slug": "speed",
+   "name": "Speed",
+   "description": "Improve the performance of your website or web application",
+   "categories": [
+    "Application performance"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/speed/",
+   "docs_path": "/speed/",
+   "aliases": [],
+   "terms": [
+    "Rocket Loader",
+    "Cloudflare Polish",
+    "Mirage",
+    "Auto Minify",
+    "Speed Brain",
+    "Early Hints",
+    "Cloudflare Observatory"
+   ],
+   "tags": [
+    "cloudflare-polish",
+    "mirage",
+    "rocketloader",
+    "speed"
+   ]
+  },
+  {
+   "slug": "ssl-tls",
+   "name": "SSL/TLS",
+   "description": "Encrypt your web traffic to prevent data theft and other tampering",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/ssl/",
+   "docs_path": "/ssl/",
+   "aliases": [],
+   "terms": [
+    "SSL/TLS",
+    "Universal SSL",
+    "Advanced Certificate Manager",
+    "Total TLS"
+   ],
+   "tags": [
+    "advanced-certificate-manager",
+    "ssl",
+    "tls",
+    "tls-1-3",
+    "universal-ssl"
+   ]
+  },
+  {
+   "slug": "stream",
+   "name": "Stream",
+   "description": "Store, encode, deliver, and play videos on sites and applications",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/stream/",
+   "docs_path": "/stream/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Stream",
+    "Stream Live"
+   ],
+   "tags": [
+    "cloudflare-stream",
+    "live-streaming"
+   ]
+  },
+  {
+   "slug": "tenant",
+   "name": "Tenant",
+   "description": "Provision and manage Cloudflare accounts and services for your team or customers",
+   "categories": [
+    "Core platform",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/tenant/",
+   "docs_path": "/tenant/",
+   "aliases": [],
+   "terms": [],
+   "tags": []
+  },
+  {
+   "slug": "terraform",
+   "name": "Terraform",
+   "description": "Define and store Cloudflare configurations in source code repositories like GitHub",
+   "categories": [
+    "Core platform",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/terraform/",
+   "docs_path": "/terraform/",
+   "aliases": [],
+   "terms": [
+    "Terraform"
+   ],
+   "tags": [
+    "terraform"
+   ]
+  },
+  {
+   "slug": "time-services",
+   "name": "Time Services",
+   "description": "Cloudflare's suite of time services: NTP, NTS, and Roughtime",
+   "categories": [
+    "Core platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/time-services/",
+   "docs_path": "/time-services/",
+   "aliases": [],
+   "terms": [
+    "Time Services",
+    "Roughtime",
+    "time.cloudflare.com"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "turn-service",
+   "name": "TURN Service",
+   "description": "Ensure connectivity with a relay point for traffic between WebRTC clients",
+   "categories": [
+    "Developer platform",
+    "Media"
+   ],
+   "parent": "realtime",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/realtime/turn/",
+   "docs_path": "/realtime/turn/",
+   "aliases": [],
+   "terms": [
+    "TURN Service",
+    "Cloudflare TURN"
+   ],
+   "tags": [
+    "turn"
+   ]
+  },
+  {
+   "slug": "turnstile",
+   "name": "Turnstile",
+   "description": "Turnstile is Cloudflare's smart CAPTCHA alternative",
+   "categories": [
+    "Application security",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/turnstile/",
+   "docs_path": "/turnstile/",
+   "aliases": [],
+   "terms": [
+    "Turnstile"
+   ],
+   "tags": [
+    "turnstile"
+   ]
+  },
+  {
+   "slug": "vectorize",
+   "name": "Vectorize",
+   "description": "Store, query, and manage high-dimensional vector databases",
+   "categories": [
+    "Developer platform",
+    "AI",
+    "Storage"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/vectorize/",
+   "docs_path": "/vectorize/",
+   "aliases": [],
+   "terms": [
+    "Vectorize"
+   ],
+   "tags": [
+    "vectorize"
+   ]
+  },
+  {
+   "slug": "waf",
+   "name": "WAF",
+   "description": "Filter incoming traffic and protect against web app vulnerabilities",
+   "categories": [
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/waf/",
+   "docs_path": "/waf/",
+   "aliases": [],
+   "terms": [
+    "WAF",
+    "Web Application Firewall",
+    "WAF Managed Rules"
+   ],
+   "tags": [
+    "ai-waf",
+    "firewall",
+    "managed-rules",
+    "waf",
+    "waf-rules"
+   ]
+  },
+  {
+   "slug": "waiting-room",
+   "name": "Waiting Room",
+   "description": "Create a virtual waiting room to manage peak traffic",
+   "categories": [
+    "Application performance",
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/waiting-room/",
+   "docs_path": "/waiting-room/",
+   "aliases": [],
+   "terms": [
+    "Waiting Room"
+   ],
+   "tags": [
+    "waiting-room"
+   ]
+  },
+  {
+   "slug": "warp-client",
+   "name": "WARP Client",
+   "description": "Allows individuals or organizations to have a faster, more secure connection to the Internet",
+   "categories": [
+    "Consumer services",
+    "Network security",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/warp-client/",
+   "docs_path": "/warp-client/",
+   "aliases": [],
+   "terms": [
+    "WARP",
+    "WARP+",
+    "WARP client"
+   ],
+   "tags": [
+    "warp"
+   ]
+  },
+  {
+   "slug": "web-search-api",
+   "name": "Web Search API",
+   "description": "Ground AI agents and applications with real-time web search results",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/web-search/",
+   "docs_path": "/web-search/",
+   "aliases": [],
+   "terms": [
+    "Web Search API"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "web3",
+   "name": "Web3",
+   "description": "Gateways to networks to help you develop applications without worrying about running infrastructure",
+   "categories": [
+    "Application performance",
+    "Application security"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/web3/",
+   "docs_path": "/web3/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Web3",
+    "Web3 Gateways",
+    "IPFS Gateway",
+    "Ethereum Gateway"
+   ],
+   "tags": [
+    "ethereum",
+    "ipfs",
+    "web3"
+   ]
+  },
+  {
+   "slug": "workers",
+   "name": "Workers",
+   "description": "Build, deploy, and scale serverless applications globally with low latency and minimal configuration",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/workers/",
+   "docs_path": "/workers/",
+   "aliases": [],
+   "terms": [
+    "Workers",
+    "Worker",
+    "Workers Unbound",
+    "Workers Paid"
+   ],
+   "tags": [
+    "workers",
+    "workers-1",
+    "wrangler"
+   ]
+  },
+  {
+   "slug": "workers-ai",
+   "name": "Workers AI",
+   "description": "Run AI models in Workers, Pages, or via API",
+   "categories": [
+    "Developer platform",
+    "AI"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/workers-ai/",
+   "docs_path": "/workers-ai/",
+   "aliases": [],
+   "terms": [
+    "Workers AI"
+   ],
+   "tags": [
+    "workers-ai"
+   ]
+  },
+  {
+   "slug": "workers-analytics-engine",
+   "name": "Workers Analytics Engine",
+   "description": "Unlimited-cardinality analytics at scale via an API to write data from Workers and a SQL API to query that data",
+   "categories": [
+    "Developer platform",
+    "Analytics"
+   ],
+   "parent": "analytics",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/analytics/analytics-engine/",
+   "docs_path": "/analytics/analytics-engine/",
+   "aliases": [
+    "Analytics Engine"
+   ],
+   "terms": [
+    "Workers Analytics Engine",
+    "Analytics Engine"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "workers-for-platforms",
+   "name": "Workers for Platforms",
+   "description": "Deploy custom code for your users or let them directly deploy code to your platform",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": "cloudflare-for-platforms",
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/",
+   "docs_path": "/cloudflare-for-platforms/workers-for-platforms/",
+   "aliases": [],
+   "terms": [
+    "Workers for Platforms"
+   ],
+   "tags": []
+  },
+  {
+   "slug": "workers-sites",
+   "name": "Workers Sites",
+   "description": "Static sites served from Workers KV (deprecated in favour of Pages and Workers static assets)",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": "workers",
+   "status": "retired",
+   "docs_url": null,
+   "docs_path": null,
+   "aliases": [],
+   "terms": [
+    "Workers Sites"
+   ],
+   "tags": [
+    "workers-sites"
+   ]
+  },
+  {
+   "slug": "workers-vpc",
+   "name": "Workers VPC",
+   "description": "Connect Cloudflare Worker's Virtual Private Cloud to your private clouds to build cross-cloud apps.",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/workers-vpc/",
+   "docs_path": "/workers-vpc/",
+   "aliases": [],
+   "terms": [
+    "Workers VPC"
+   ],
+   "tags": [
+    "workers-vpc"
+   ]
+  },
+  {
+   "slug": "workflows",
+   "name": "Workflows",
+   "description": "Build durable, multi-step applications using the Workers platform",
+   "categories": [
+    "Developer platform"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/workflows/",
+   "docs_path": "/workflows/",
+   "aliases": [],
+   "terms": [
+    "Cloudflare Workflows"
+   ],
+   "tags": [
+    "workflows"
+   ]
+  },
+  {
+   "slug": "zaraz",
+   "name": "Zaraz",
+   "description": "Run third-party tools and services on the cloud for improved speed and security",
+   "categories": [
+    "Developer platform",
+    "Application performance",
+    "Analytics",
+    "Privacy"
+   ],
+   "parent": null,
+   "status": "current",
+   "docs_url": "https://developers.cloudflare.com/zaraz/",
+   "docs_path": "/zaraz/",
+   "aliases": [],
+   "terms": [
+    "Zaraz"
+   ],
+   "tags": [
+    "managed-components",
+    "zaraz"
+   ]
+  }
+ ]
+}

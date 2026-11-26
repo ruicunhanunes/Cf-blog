@@ -6,6 +6,7 @@ import { handleMcp } from "../src/mcp/server";
 import { appFetch } from "../src/app";
 import { listPosts, stats } from "../src/search/data";
 import { blogFetch, localeOf, parseSitemapIndex, parseUrlset, slugOf } from "../src/sync/parse";
+import { catalogHealth, rematchBatch } from "../src/products";
 export { SyncWorkflow } from "../src/sync/workflow";
 
 // Route outbound https through the local forwarder (scripts/fwd.mjs). Test-only.
@@ -70,6 +71,12 @@ export default {
       if (u.pathname === "/list") return Response.json(await listPosts(env, { tag: p.get("tag") ?? undefined, year: p.get("year") ? Number(p.get("year")) : undefined, limit: 5 }));
       if (u.pathname === "/stats") return Response.json(await stats(env));
       if (u.pathname === "/mcp") return handleMcp(req, env, "test@example.com");
+      if (u.pathname === "/rematch") {
+        let after = 0, posts = 0, links = 0;
+        for (;;) { const r = await rematchBatch(env, after, 100); posts += r.n; links += r.links; after = r.last; if (r.n < 100) break; }
+        return Response.json({ posts, links });
+      }
+      if (u.pathname === "/catalog-health") return Response.json(await catalogHealth(env));
       if (u.pathname === "/workflow") { const i = await env.SYNC.create({ params: {} }); return Response.json({ id: i.id }); }
       if (u.pathname === "/workflow-status") { const i = await env.SYNC.get(p.get("id")!); return Response.json(await i.status()); }
       return new Response("harness", { status: 404 });

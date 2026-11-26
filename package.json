@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --no-warnings scripts/test-products.mjs",
+    "typecheck": "tsc -p .",
+    "products:build": "NODE_USE_ENV_PROXY=1 node --no-warnings scripts/build-products.mjs",
+    "products:check": "NODE_USE_ENV_PROXY=1 node --no-warnings scripts/build-products.mjs --check",
+    "products:eval": "NODE_USE_ENV_PROXY=1 node --no-warnings scripts/eval-products.mjs"
   },
   "repository": {
     "type": "git",

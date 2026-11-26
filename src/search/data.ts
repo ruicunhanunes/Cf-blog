@@ -1,4 +1,5 @@
 import type { Env } from "../env";
+import { descendants, PRODUCT } from "../products";
 
 export interface PostCard {
   slug: string;
@@ -8,6 +9,8 @@ export interface PostCard {
   published_at: string;
   authors: { slug: string; name: string }[];
   tags: { slug: string; name: string }[];
+  /** Products the post is strongly about (tag or title signal). */
+  products?: { slug: string; name: string }[];
   snippet?: string;
   score?: number;
 }
@@ -19,6 +22,18 @@ export interface Filters {
   to?: string; // ISO date
   year?: number;
   since?: string;
+  /** Product slug: posts strongly related to it (tag or title signal). */
+  product?: string;
+  /** With product: also its sub-products (the parent page's toggle). */
+  sub?: boolean;
+  /** With product: also posts that only mention it in the body. */
+  mentions?: boolean;
+}
+
+/** The product slugs a filter covers (itself, plus descendants when sub is set). */
+export function productScope(f: Filters): string[] {
+  if (!f.product || !PRODUCT.has(f.product)) return f.product ? [f.product] : [];
+  return f.sub ? [f.product, ...descendants(f.product)] : [f.product];
 }
 
 /** Builds SQL WHERE fragments against alias p. */
@@ -31,6 +46,11 @@ export function filterSql(f: Filters): { sql: string; params: unknown[] } {
   if (f.to) { parts.push("p.published_at < ?"); params.push(endDate(f.to)); }
   if (f.year) { parts.push("p.year = ?"); params.push(f.year); }
   if (f.since) { parts.push("p.published_at >= ?"); params.push(normDate(f.since)); }
+  if (f.product) {
+    const scope = productScope(f);
+    parts.push(`EXISTS (SELECT 1 FROM product_posts pp WHERE pp.post_slug = p.slug AND pp.product_slug IN (${scope.map(() => "?").join(",")})${f.mentions ? "" : " AND pp.signal != 'body'"})`);
+    params.push(...scope);
+  }
   return { sql: parts.join(" AND "), params };
 }
 
@@ -44,13 +64,14 @@ function endDate(d: string): string {
 }
 
 /** Attach authors and tags to a list of post rows, preserving order. */
-export async function hydrate(env: Env, rows: Omit<PostCard, "authors" | "tags">[]): Promise<PostCard[]> {
+export async function hydrate(env: Env, rows: Omit<PostCard, "authors" | "tags" | "products">[]): Promise<PostCard[]> {
   if (!rows.length) return [];
   const slugs = rows.map((r) => r.slug);
   const ph = slugs.map(() => "?").join(",");
-  const [a, t] = await env.DB.batch([
+  const [a, t, pr] = await env.DB.batch([
     env.DB.prepare(`SELECT pa.post_slug, au.slug, au.name FROM post_authors pa JOIN authors au ON au.slug = pa.author_slug WHERE pa.post_slug IN (${ph})`).bind(...slugs),
     env.DB.prepare(`SELECT pt.post_slug, tg.slug, tg.name FROM post_tags pt JOIN tags tg ON tg.slug = pt.tag_slug WHERE pt.post_slug IN (${ph})`).bind(...slugs),
+    env.DB.prepare(`SELECT post_slug, product_slug AS slug, '' AS name FROM product_posts WHERE signal != 'body' AND post_slug IN (${ph}) ORDER BY mentions DESC`).bind(...slugs),
   ]);
   const by = (res: D1Result) => {
     const m = new Map<string, { slug: string; name: string }[]>();
@@ -62,7 +83,9 @@ export async function hydrate(env: Env, rows: Omit<PostCard, "authors" | "tags">
   };
   const am = by(a);
   const tm = by(t);
-  return rows.map((r) => ({ ...r, authors: am.get(r.slug) ?? [], tags: tm.get(r.slug) ?? [] }));
+  const pm = by(pr);
+  const products = (s: string) => (pm.get(s) ?? []).filter((x) => PRODUCT.has(x.slug)).map((x) => ({ slug: x.slug, name: PRODUCT.get(x.slug)!.name }));
+  return rows.map((r) => ({ ...r, authors: am.get(r.slug) ?? [], tags: tm.get(r.slug) ?? [], products: products(r.slug) }));
 }
 
 export interface ListOpts extends Filters {
@@ -136,9 +159,36 @@ export async function stats(env: Env) {
   return { posts: ps.posts, oldest: ps.oldest, newest: ps.newest, last_sync: run };
 }
 
-export async function yearCounts(env: Env) {
-  const r = await env.DB.prepare("SELECT year, COUNT(*) AS count FROM posts WHERE deleted_at IS NULL GROUP BY year ORDER BY year DESC").all<{ year: number; count: number }>();
+export async function yearCounts(env: Env, f: Filters = {}) {
+  const w = filterSql({ ...f, year: undefined });
+  const r = await env.DB.prepare(`SELECT p.year, COUNT(*) AS count FROM posts p WHERE ${w.sql} GROUP BY p.year ORDER BY p.year DESC`).bind(...w.params).all<{ year: number; count: number }>();
   return r.results;
+}
+
+/** Post counts per product: strong (tag/title) and body-only mentions. */
+export async function productCounts(env: Env): Promise<Map<string, { strong: number; body: number }>> {
+  const r = await env.DB.prepare(
+    `SELECT pp.product_slug AS slug, SUM(pp.signal != 'body') AS strong, SUM(pp.signal = 'body') AS body
+       FROM product_posts pp JOIN posts p ON p.slug = pp.post_slug AND p.deleted_at IS NULL GROUP BY pp.product_slug`,
+  ).all<{ slug: string; strong: number; body: number }>();
+  return new Map(r.results.map((x) => [x.slug, { strong: x.strong, body: x.body }]));
+}
+
+/** "Also mentioned in": posts that mention the product(s) in the body but are not strongly about any of them. */
+export async function productMentions(env: Env, f: Filters, limit = 50): Promise<{ posts: (PostCard & { mentions: number })[]; total: number }> {
+  const scope = productScope(f);
+  if (!scope.length) return { posts: [], total: 0 };
+  const ph = scope.map(() => "?").join(",");
+  const base = `FROM product_posts pp JOIN posts p ON p.slug = pp.post_slug AND p.deleted_at IS NULL
+     WHERE pp.product_slug IN (${ph}) AND pp.signal = 'body'
+       AND NOT EXISTS (SELECT 1 FROM product_posts s WHERE s.post_slug = pp.post_slug AND s.product_slug IN (${ph}) AND s.signal != 'body')`;
+  const [rows, count] = await env.DB.batch([
+    env.DB.prepare(`SELECT p.slug, p.url, p.title, p.description, p.published_at, MAX(pp.mentions) AS mentions ${base} GROUP BY p.slug ORDER BY mentions DESC, p.published_at DESC LIMIT ?`).bind(...scope, ...scope, clamp(limit, 1, 100)),
+    env.DB.prepare(`SELECT COUNT(DISTINCT p.slug) AS n ${base}`).bind(...scope, ...scope),
+  ]);
+  const list = rows.results as (Omit<PostCard, "authors" | "tags"> & { mentions: number })[];
+  const cards = await hydrate(env, list);
+  return { posts: cards.map((c, i) => ({ ...c, mentions: list[i].mentions })), total: (count.results[0] as { n: number }).n };
 }
 
 export function clamp(n: number, lo: number, hi: number) {

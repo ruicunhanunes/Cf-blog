@@ -158,14 +158,15 @@ export async function semanticSearch(env: Env, q: string, f: Filters, limit = 20
   const where = filterSql(f);
   const slugs = hits.map((h) => h.slug);
   const known = new Map<string, Omit<PostCard, "authors" | "tags">>();
-  for (let i = 0; i < slugs.length; i += 90) {
-    const chunk = slugs.slice(i, i + 90);
+  const size = Math.max(10, 90 - where.params.length); // D1: at most 100 bound parameters per statement
+  for (let i = 0; i < slugs.length; i += size) {
+    const chunk = slugs.slice(i, i + size);
     const rows = await env.DB.prepare(`SELECT p.slug, p.url, p.title, p.description, p.published_at FROM posts p WHERE p.slug IN (${chunk.map(() => "?").join(",")}) AND ${where.sql}`)
       .bind(...chunk, ...where.params).all<Omit<PostCard, "authors" | "tags">>();
     for (const r of rows.results) known.set(r.slug, r);
   }
   // Slugs the library hasn't synced yet: keep them (only when no filters apply) and enqueue a fetch.
-  const unfiltered = !f.tag && !f.author && !f.from && !f.to && !f.year && !f.since;
+  const unfiltered = !f.tag && !f.author && !f.from && !f.to && !f.year && !f.since && !f.product;
   const missing: SemanticHit[] = [];
   if (unfiltered) {
     const exist = new Set<string>();
