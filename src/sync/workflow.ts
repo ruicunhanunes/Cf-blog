@@ -83,14 +83,21 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
       }
       const all = await this.env.DB.prepare("SELECT slug FROM posts WHERE deleted_at IS NULL").all<{ slug: string }>();
       if (seen.size < all.results.length * 0.9) return "skipped: sitemap looks partial";
-      const missing = all.results.map((r) => r.slug).filter((s) => !seen.has(s));
+      const absent = all.results.map((r) => r.slug).filter((s) => !seen.has(s));
+      // Some live posts are simply not in any sitemap: only count a miss when the URL itself is gone.
+      const missing: string[] = [];
+      for (const s of absent.slice(0, 200)) {
+        const res = await blogFetch(`https://blog.cloudflare.com/${s}/`, this.env.CONTACT, "text/html");
+        await res.body?.cancel();
+        if (res.status === 404 || res.status === 410) missing.push(s);
+      }
       const now = new Date().toISOString();
       const stmts = missing.flatMap((s) => [
         this.env.DB.prepare("UPDATE posts SET missing_runs = missing_runs + 1 WHERE slug = ?").bind(s),
         this.env.DB.prepare("UPDATE posts SET deleted_at = ? WHERE slug = ? AND missing_runs >= 2").bind(now, s),
       ]);
       for (let i = 0; i < stmts.length; i += 50) await this.env.DB.batch(stmts.slice(i, i + 50));
-      return `missing: ${missing.length}`;
+      return `not in sitemaps: ${absent.length}, gone: ${missing.length}`;
     });
 
     // Daily canary against both semantic endpoints (PRD section 8).

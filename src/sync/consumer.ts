@@ -80,7 +80,7 @@ export async function processPost(job: FetchJob, env: Env): Promise<string> {
   await env.OPS.put(`raw/${job.slug}.html`, htmlText, { httpMetadata: { contentType: "text/html" } });
 
   if (!job.force && existing && existing.content_hash === hash) {
-    await env.DB.prepare("UPDATE posts SET lastmod = ?, checked_at = ?, missing_runs = 0, deleted_at = NULL WHERE slug = ?").bind(job.lastmod, now, job.slug).run();
+    await env.DB.prepare("UPDATE posts SET lastmod = COALESCE(?, lastmod), checked_at = ?, missing_runs = 0, deleted_at = NULL WHERE slug = ?").bind(job.lastmod, now, job.slug).run();
     return "unchanged";
   }
 
@@ -106,7 +106,7 @@ export async function processPost(job: FetchJob, env: Env): Promise<string> {
     env.DB.prepare(
       `INSERT INTO posts (slug, url, title, description, image_url, published_at, updated_at, lastmod, word_count, reading_minutes, body_source, r2_key, content_hash, indexed_at, checked_at, deleted_at, missing_runs)
        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?14, NULL, 0)
-       ON CONFLICT(slug) DO UPDATE SET url=?2, title=?3, description=?4, image_url=?5, published_at=?6, updated_at=?7, lastmod=?8,
+       ON CONFLICT(slug) DO UPDATE SET url=?2, title=?3, description=?4, image_url=?5, published_at=?6, updated_at=?7, lastmod=COALESCE(?8, posts.lastmod),
          word_count=?9, reading_minutes=?10, body_source=?11, r2_key=?12, content_hash=?13, indexed_at=?14, checked_at=?14, deleted_at=NULL, missing_runs=0`,
     ).bind(job.slug, url, title, description, image, published, meta.modified ?? null, job.lastmod, words, Math.max(1, Math.round(words / 230)), bodySource, r2Key, hash, now),
     env.DB.prepare("DELETE FROM post_tags WHERE post_slug = ?").bind(job.slug),

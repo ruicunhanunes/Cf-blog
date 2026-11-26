@@ -8,15 +8,22 @@ const STOP = new Set("a an and are as at be by did do does for from has have how
 export function toFtsQuery(q: string, joiner: " " | " OR " = " "): string {
   const terms = q
     .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s'-]/gu, " ")
+    // Keep dotted/punctuated tokens (1.1.1.1, 17.2m, http/2) together: they become FTS phrases below.
+    .replace(/[^\p{L}\p{N}\s'.\/:-]/gu, " ")
     .split(/\s+/)
-    .map((t) => t.replace(/^['-]+|['-]+$/g, ""))
+    .map((t) => t.replace(/^['.\/:-]+|['.\/:-]+$/g, ""))
     .filter(Boolean)
     .slice(0, 16);
   const content = terms.filter((t) => !STOP.has(t));
   const use = (content.length ? content : terms).slice(0, 12);
   if (!use.length) return "";
-  return use.map((t, i) => `"${t.replace(/"/g, "")}"${joiner === " " && i === use.length - 1 && t.length >= 3 ? "*" : ""}`).join(joiner);
+  return use
+    .map((t, i) => {
+      const phrase = t.replace(/["'.\/:-]+/g, " ").trim(); // unicode61 splits on these too, so a phrase matches adjacency
+      const prefix = joiner === " " && i === use.length - 1 && t.length >= 3 && !/[.\/:-]/.test(t) ? "*" : "";
+      return `"${phrase}"${prefix}`;
+    })
+    .join(joiner);
 }
 
 export async function keywordSearch(env: Env, q: string, f: Filters, limit = 20, offset = 0): Promise<PostCard[]> {
