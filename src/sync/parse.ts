@@ -104,12 +104,16 @@ export function parseMarkdown(md: string): ParsedMarkdown {
   // Trim site chrome: start after the hero image line, end before the share links / Related tags.
   let body = rest;
   const lines = body.split("\n");
+  // Leading chrome is "[Skip to content](...)" and "[Cloudflare home](...)" links; a hero image may follow.
   let start = 0;
-  const heroIdx = lines.findIndex((l, i) => i < 40 && l.startsWith("!["));
-  if (heroIdx !== -1) start = heroIdx + 1;
+  for (let i = 0; i < Math.min(lines.length, 15); i++) {
+    if (/^\[(Skip to content|Cloudflare home)\]\(/.test(lines[i])) start = i + 1;
+  }
+  while (start < lines.length && !lines[start].trim()) start++;
+  if (start < lines.length && /^!\[[^\]]*\]\([^)]*\)/.test(lines[start])) start++;
   let end = lines.length;
   for (let i = start; i < lines.length; i++) {
-    if (lines[i].startsWith("## Related tags") || lines[i].startsWith("[Discuss on Hacker News")) {
+    if (lines[i].startsWith("## Related tags") || lines[i].startsWith("[Discuss on Hacker News") || lines[i] === "Discuss Online") {
       end = i;
       break;
     }

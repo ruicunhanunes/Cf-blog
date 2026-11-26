@@ -1,0 +1,37 @@
+{
+  "description": "Known-item set (target: >= 18 of 20 in the top 5, keyword mode) and natural-language questions (target: >= 1 relevant post in the top 5, hybrid mode). Run with: node scripts/eval.mjs <origin> (needs a Cf-Access-Jwt-Assertion or run through the local harness).",
+  "known_items": [
+    { "query": "regex outage July 2019", "slug": "details-of-the-cloudflare-outage-on-july-2-2019" },
+    { "query": "cloudbleed parser memory leak", "slug": "incident-report-on-memory-leak-caused-by-cloudflare-parser-bug" },
+    { "query": "spamhaus ddos", "slug": "the-ddos-that-knocked-spamhaus-offline-and-ho" },
+    { "query": "lavarand lava lamps randomness", "slug": "randomness-101-lavarand-in-production" },
+    { "query": "keyless ssl", "slug": "announcing-keyless-ssl-all-the-benefits-of-cloudflare-without-having-to-turn-over-your-private-ssl-keys" },
+    { "query": "heartbleed private keys prime", "slug": "searching-for-the-prime-suspect-how-heartbleed-leaked-private-keys" },
+    { "query": "leap second dns", "slug": "how-and-why-the-leap-second-affected-cloudflare-dns" },
+    { "query": "1.1.1.1 dns resolver launch", "slug": "dns-resolver-1-1-1-1" },
+    { "query": "verizon bgp optimizer", "slug": "how-verizon-and-a-bgp-optimizer-knocked-large-parts-of-the-internet-offline-today" },
+    { "query": "quicksilver configuration distribution", "slug": "introducing-quicksilver-configuration-distribution-at-internet-scale" },
+    { "query": "unimog load balancer", "slug": "unimog-cloudflares-edge-load-balancer" },
+    { "query": "introducing durable objects", "slug": "introducing-workers-durable-objects" },
+    { "query": "introducing r2 object storage", "slug": "introducing-r2-object-storage" },
+    { "query": "introducing d1", "slug": "introducing-d1" },
+    { "query": "pingora proxy", "slug": "how-we-built-pingora-the-proxy-that-connects-cloudflare-to-the-internet" },
+    { "query": "introducing oxy", "slug": "introducing-oxy" },
+    { "query": "17.2M rps ddos", "slug": "cloudflare-thwarts-17-2m-rps-ddos-attack-the-largest-ever-reported" },
+    { "query": "outage june 21 2022", "slug": "cloudflare-outage-on-june-21-2022" },
+    { "query": "road to quic", "slug": "the-road-to-quic" },
+    { "query": "introducing workers kv", "slug": "introducing-workers-kv" }
+  ],
+  "questions": [
+    "How has Cloudflare explained its approach to post-quantum TLS?",
+    "Why did a single regular expression take down the network?",
+    "How does Cloudflare generate randomness for cryptography?",
+    "What caused memory to leak from HTML parsing?",
+    "How does Cloudflare distribute configuration to every server quickly?",
+    "How do Durable Objects provide strong consistency?",
+    "What did Cloudflare learn from BGP route leaks?",
+    "How does Cloudflare mitigate the largest DDoS attacks automatically?",
+    "Why did Cloudflare build its own proxy instead of using NGINX?",
+    "How does WARP differ from a traditional VPN?"
+  ]
+}
