@@ -24,6 +24,8 @@ export interface Env {
 export interface FetchJob {
   /** Re-upload the stored Markdown to AI Search without re-crawling. */
   reindex?: boolean;
+  /** Rewrite even when the body hash is unchanged (metadata parser fixes). */
+  force?: boolean;
   url: string;
   slug: string;
   lastmod: string | null;
@@ -34,6 +36,8 @@ export interface SyncParams {
   full?: boolean;
   /** Enqueue every stored post for AI Search re-upload; no crawling. */
   reindex?: boolean;
+  /** Re-fetch (forced) only these slugs. */
+  slugs?: string[];
 }
 
 export const BLOG_ORIGIN = "https://blog.cloudflare.com";

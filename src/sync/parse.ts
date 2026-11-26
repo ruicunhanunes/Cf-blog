@@ -118,6 +118,19 @@ export function parseMarkdown(md: string): ParsedMarkdown {
   return { frontmatter, body, tags };
 }
 
+const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: "\u00a0", hellip: "…", mdash: "—", ndash: "–", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“" };
+
+/** HTMLRewriter hands back attribute values and text with entities still encoded. */
+export function decodeEntities(s: string): string {
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
+    if (e[0] === "#") {
+      const cp = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+      return Number.isFinite(cp) && cp > 0 && cp < 0x110000 ? String.fromCodePoint(cp) : m;
+    }
+    return NAMED[e.toLowerCase()] ?? m;
+  });
+}
+
 export interface HtmlMeta {
   canonical?: string;
   title?: string;
@@ -144,7 +157,8 @@ export async function parseHtml(res: Response): Promise<HtmlMeta> {
     .on("meta", {
       element(e) {
         const p = e.getAttribute("property") ?? e.getAttribute("name");
-        const c = e.getAttribute("content") ?? undefined;
+        const raw = e.getAttribute("content");
+        const c = raw ? decodeEntities(raw) : undefined;
         if (!p || !c) return;
         if (p === "og:title") meta.title ??= c;
         else if (p === "og:description") meta.description ??= c;
@@ -166,7 +180,7 @@ export async function parseHtml(res: Response): Promise<HtmlMeta> {
         authorName = "";
         e.onEndTag(() => {
           if (authorSlug && !meta.authors.some((a) => a.slug === authorSlug)) {
-            meta.authors.push({ slug: authorSlug.toLowerCase(), name: authorName.trim() || authorSlug });
+            meta.authors.push({ slug: authorSlug.toLowerCase(), name: decodeEntities(authorName).trim() || authorSlug });
           }
           authorSlug = null;
         });
@@ -182,7 +196,7 @@ export async function parseHtml(res: Response): Promise<HtmlMeta> {
         tagName = "";
         e.onEndTag(() => {
           if (tagSlug && meta.tags.length < 25 && !meta.tags.some((t) => t.slug === tagSlug)) {
-            meta.tags.push({ slug: tagSlug.toLowerCase(), name: tagName.trim() || tagSlug });
+            meta.tags.push({ slug: tagSlug.toLowerCase(), name: decodeEntities(tagName).trim() || tagSlug });
           }
           tagSlug = null;
         });

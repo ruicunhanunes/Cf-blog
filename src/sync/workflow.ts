@@ -12,6 +12,16 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
   async run(event: WorkflowEvent<SyncParams>, step: WorkflowStep) {
     const runId = event.instanceId;
     const full = !!event.payload?.full;
+    if (event.payload?.slugs?.length) {
+      const n = await step.do("enqueue slugs", async () => {
+        const list = event.payload.slugs!.slice(0, 5000);
+        for (let i = 0; i < list.length; i += 100) {
+          await this.env.FETCH_QUEUE.sendBatch(list.slice(i, i + 100).map((slug) => ({ body: { force: true, slug, url: `https://blog.cloudflare.com/${slug}/`, lastmod: null, run_id: runId } })));
+        }
+        return list.length;
+      });
+      return { refetch: n };
+    }
     if (event.payload?.reindex) {
       const n = await step.do("enqueue reindex", async () => {
         const rows = await this.env.DB.prepare("SELECT slug, url FROM posts WHERE deleted_at IS NULL").all<{ slug: string; url: string }>();
@@ -61,7 +71,7 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
         }
         const jobs: FetchJob[] = english
           .filter((e) => full || !known.has(e.slug) || known.get(e.slug) === null || (e.lastmod ?? "") > (known.get(e.slug) ?? ""))
-          .map((e) => ({ url: e.url, slug: e.slug, lastmod: e.lastmod, run_id: runId }));
+          .map((e) => ({ url: e.url, slug: e.slug, lastmod: e.lastmod, run_id: runId, force: full }));
         for (let i = 0; i < jobs.length; i += 100) {
           await this.env.FETCH_QUEUE.sendBatch(jobs.slice(i, i + 100).map((body) => ({ body })));
         }

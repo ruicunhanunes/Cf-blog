@@ -80,7 +80,7 @@ export async function processPost(job: FetchJob, env: Env): Promise<string> {
   // Raw HTML for re-parsing without re-crawling (ops bucket, invisible to AI Search).
   await env.OPS.put(`raw/${job.slug}.html`, htmlText, { httpMetadata: { contentType: "text/html" } });
 
-  if (existing && existing.content_hash === hash) {
+  if (!job.force && existing && existing.content_hash === hash) {
     await env.DB.prepare("UPDATE posts SET lastmod = ?, checked_at = ?, missing_runs = 0, deleted_at = NULL WHERE slug = ?").bind(job.lastmod, now, job.slug).run();
     return "unchanged";
   }
