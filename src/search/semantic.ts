@@ -1,19 +1,11 @@
 import type { Env } from "../env";
 import { filterSql, hydrate, type Filters, type PostCard } from "./data";
+// AI Search instance binding (built-in storage): env.AI_SEARCH
 
-interface Chunk {
-  filename: string;
-  score: number;
-  content: { type: string; text: string }[];
-}
-
-function aiSearch(env: Env) {
-  // AI Search (formerly AutoRAG) is reached through the Workers AI binding.
-  return (env.AI as unknown as { autorag(name: string): { search(o: unknown): Promise<{ data: Chunk[] }>; aiSearch(o: unknown): Promise<{ response: string; data: Chunk[] }> } }).autorag(env.AI_SEARCH_NAME);
-}
+type Chunk = AiSearchSearchResponse["chunks"][number];
 
 function slugFromFilename(f: string): string | null {
-  const m = f.match(/(?:^|\/)posts\/([^/]+)\.md$/) ?? f.match(/([^/]+)\.md$/);
+  const m = f.match(/([^/]+)\.md$/);
   return m ? m[1] : null;
 }
 
@@ -22,12 +14,15 @@ function stripFrontmatter(t: string): string {
 }
 
 export async function semanticSearch(env: Env, q: string, f: Filters, limit = 20): Promise<PostCard[]> {
-  const res = await aiSearch(env).search({ query: q, max_num_results: 50, rewrite_query: false, ranking_options: { score_threshold: 0 } });
+  const res = await env.AI_SEARCH.search({
+    query: q,
+    ai_search_options: { retrieval: { max_num_results: 50, match_threshold: 0.2, return_on_failure: false }, query_rewrite: { enabled: false } },
+  });
   const best = new Map<string, { score: number; text: string }>();
-  for (const c of res.data ?? []) {
-    const slug = slugFromFilename(c.filename);
+  for (const c of (res.chunks ?? []) as Chunk[]) {
+    const slug = slugFromFilename(c.item?.key ?? "");
     if (!slug) continue;
-    if (!best.has(slug) || best.get(slug)!.score < c.score) best.set(slug, { score: c.score, text: c.content?.map((x) => x.text).join(" ") ?? "" });
+    if (!best.has(slug) || best.get(slug)!.score < c.score) best.set(slug, { score: c.score, text: c.text ?? "" });
   }
   if (!best.size) return [];
   const slugs = [...best.keys()];
@@ -43,8 +38,14 @@ export async function semanticSearch(env: Env, q: string, f: Filters, limit = 20
 }
 
 export async function askBlog(env: Env, question: string, f: Filters) {
-  const res = await aiSearch(env).aiSearch({ query: question, max_num_results: 15, rewrite_query: true });
-  const slugs = [...new Set((res.data ?? []).map((c) => slugFromFilename(c.filename)).filter((s): s is string => !!s))];
+  const res = await env.AI_SEARCH.chatCompletions({
+    messages: [
+      { role: "system", content: "Answer using only the provided Cloudflare blog excerpts. Cite post titles and dates. If the excerpts do not answer the question, say so." },
+      { role: "user", content: question },
+    ],
+    ai_search_options: { retrieval: { max_num_results: 15 }, query_rewrite: { enabled: true } },
+  });
+  const slugs = [...new Set(((res.chunks ?? []) as Chunk[]).map((c) => slugFromFilename(c.item?.key ?? "")).filter((s): s is string => !!s))];
   let sources: { title: string; url: string; published_at: string }[] = [];
   if (slugs.length) {
     const where = filterSql(f);
@@ -53,7 +54,7 @@ export async function askBlog(env: Env, question: string, f: Filters) {
     ).bind(...slugs, ...where.params).all<{ title: string; url: string; published_at: string }>();
     sources = rows.results;
   }
-  return { answer: res.response, sources };
+  return { answer: res.choices?.[0]?.message?.content ?? "", sources };
 }
 
 export function escapeHtml(s: string): string {

@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blog-library",
+  "account_id": "2ca4a078fd31558d48de8371b5699c9f",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat"],
@@ -9,20 +10,20 @@
   "observability": { "enabled": true, "logs": { "enabled": true, "invocation_logs": true } },
   "triggers": { "crons": ["0 4 * * *"] },
   "vars": {
-    "ACCESS_TEAM_DOMAIN": "__ACCESS_TEAM_DOMAIN__",
-    "ALLOWED_EMAILS": "__ALLOWED_EMAILS__",
+    "ACCESS_TEAM_DOMAIN": "mn-net.cloudflareaccess.com",
+    "ALLOWED_EMAILS": "rui.cunhanunes@gmail.com",
     "AI_SEARCH_NAME": "blog-library",
-    "PUBLIC_ORIGIN": "__PUBLIC_ORIGIN__",
+    "PUBLIC_ORIGIN": "https://blog-library.miguel-nunes-net.workers.dev",
     "CONTACT": "https://github.com/ruicunhanunes/cf-blog"
   },
   "d1_databases": [
-    { "binding": "DB", "database_name": "blog-library", "database_id": "__D1_ID__", "migrations_dir": "migrations" }
+    { "binding": "DB", "database_name": "blog-library", "database_id": "e14ec309-2cff-4d99-9584-aafedf284899", "migrations_dir": "migrations" }
   ],
   "r2_buckets": [
     { "binding": "POSTS", "bucket_name": "blog-library" },
     { "binding": "OPS", "bucket_name": "blog-library-ops" }
   ],
-  "kv_namespaces": [{ "binding": "OAUTH_KV", "id": "__KV_ID__" }],
+  "kv_namespaces": [{ "binding": "OAUTH_KV", "id": "61ddea5a89bd40b2bdbb768872680f28" }],
   "queues": {
     "producers": [{ "binding": "FETCH_QUEUE", "queue": "blog-library-fetch" }],
     "consumers": [
@@ -31,5 +32,6 @@
     ]
   },
   "workflows": [{ "name": "blog-library-sync", "binding": "SYNC", "class_name": "SyncWorkflow" }],
-  "ai": { "binding": "AI" }
+  "ai": { "binding": "AI" },
+  "ai_search": [{ "binding": "AI_SEARCH", "instance_name": "blog-library" }]
 }

@@ -3,16 +3,19 @@ import { escapeHtml as e } from "../search/semantic";
 
 const CSS = `
 :root{--bg:#fff;--fg:#1d1d1f;--muted:#6e6e73;--line:#e5e5ea;--card:#fafafa;--accent:#f6821f;--mark:#ffe8b3;color-scheme:light dark}
+@media (min-width:600px){form.s input[type=search]{flex:1 1 auto}.seg{flex:0 0 auto}}
 @media (prefers-color-scheme:dark){:root{--bg:#111;--fg:#f2f2f7;--muted:#a1a1a6;--line:#2c2c2e;--card:#1c1c1e;--accent:#ff9f45;--mark:#5a4210}}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
 a{color:inherit}main{max-width:760px;margin:0 auto;padding:12px 16px 48px}
 header{position:sticky;top:0;background:var(--bg);padding:10px 0 8px;z-index:2;border-bottom:1px solid var(--line)}
 .brand{font-weight:700;text-decoration:none;font-size:15px;color:var(--muted)}
-form.s{display:flex;gap:8px;margin-top:6px}
-form.s input[type=search]{flex:1;min-height:44px;font-size:17px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg)}
-.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.seg label{display:flex;align-items:center;padding:0 12px;min-height:44px;font-size:14px;cursor:pointer}
+form.s{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+form.s input[type=search]{flex:1 1 100%;min-width:0;min-height:44px;font-size:17px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg)}
+.seg{display:flex;flex:1 1 100%;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg label{flex:1;display:flex;align-items:center;justify-content:center;padding:0 12px;min-height:44px;font-size:15px;cursor:pointer}
+.seg label+label{border-left:1px solid var(--line)}
+.seg label:has(input:checked){background:var(--card)}
 .seg input{position:absolute;opacity:0}.seg input:checked+span{color:var(--accent);font-weight:600}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0;font-size:14px;color:var(--muted)}
 .filters input,.filters select{min-height:36px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);padding:4px 8px;font-size:14px}
@@ -41,7 +44,7 @@ export function layout(title: string, body: string, opts: { q?: string; mode?: s
 <meta name="robots" content="noindex,nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Blog Library">
 <meta name="theme-color" content="#f6821f">
-<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials"><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>${e(title)}</title><style>${CSS}</style></head><body><main>
 <header><a class="brand" href="/">Cloudflare Blog Library</a>
 <form class="s" action="/search" method="get" role="search">

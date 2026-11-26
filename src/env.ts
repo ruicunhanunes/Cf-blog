@@ -5,6 +5,7 @@ export interface Env {
   FETCH_QUEUE: Queue<FetchJob>;
   SYNC: Workflow<SyncParams>;
   AI: Ai;
+  AI_SEARCH: AiSearchInstance;
   OAUTH_KV: KVNamespace;
   OAUTH_PROVIDER: import("@cloudflare/workers-oauth-provider").OAuthHelpers;
 
@@ -21,6 +22,8 @@ export interface Env {
 }
 
 export interface FetchJob {
+  /** Re-upload the stored Markdown to AI Search without re-crawling. */
+  reindex?: boolean;
   url: string;
   slug: string;
   lastmod: string | null;
@@ -29,6 +32,8 @@ export interface FetchJob {
 
 export interface SyncParams {
   full?: boolean;
+  /** Enqueue every stored post for AI Search re-upload; no crawling. */
+  reindex?: boolean;
 }
 
 export const BLOG_ORIGIN = "https://blog.cloudflare.com";

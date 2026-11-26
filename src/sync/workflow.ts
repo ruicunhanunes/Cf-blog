@@ -12,6 +12,16 @@ export class SyncWorkflow extends WorkflowEntrypoint<Env, SyncParams> {
   async run(event: WorkflowEvent<SyncParams>, step: WorkflowStep) {
     const runId = event.instanceId;
     const full = !!event.payload?.full;
+    if (event.payload?.reindex) {
+      const n = await step.do("enqueue reindex", async () => {
+        const rows = await this.env.DB.prepare("SELECT slug, url FROM posts WHERE deleted_at IS NULL").all<{ slug: string; url: string }>();
+        for (let i = 0; i < rows.results.length; i += 100) {
+          await this.env.FETCH_QUEUE.sendBatch(rows.results.slice(i, i + 100).map((r) => ({ body: { reindex: true, slug: r.slug, url: r.url, lastmod: null, run_id: runId } })));
+        }
+        return rows.results.length;
+      });
+      return { reindex: n };
+    }
     const startedAt = await step.do("start", async () => {
       const ts = new Date().toISOString();
       await this.env.DB.prepare("INSERT INTO sync_runs (started_at, status) VALUES (?, 'running')").bind(ts).run();
