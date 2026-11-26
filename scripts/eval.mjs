@@ -52,7 +52,7 @@ async function hybrid(query) {
   return rrf([await keyword50(query), await semantic(query)]).slice(0, 5);
 }
 
-let hits = 0;
+let hits = 0, hhits = 0;
 const report = { known_items: [], questions: [] };
 const regex = await hybrid("regex outage 2019");
 console.log(`Hybrid "regex outage 2019": July 2, 2019 post at #${regex.indexOf("details-of-the-cloudflare-outage-on-july-2-2019") + 1 || "MISS"}\n`);
@@ -60,10 +60,13 @@ for (const k of set.known_items) {
   const top = await keyword(k.query);
   const rank = top.indexOf(k.slug) + 1;
   if (rank) hits++;
-  report.known_items.push({ ...k, rank: rank || null });
-  console.log(`${rank ? `#${rank}` : "MISS"}\t${k.query}`);
+  const htop = await hybrid(k.query);
+  const hrank = htop.indexOf(k.slug) + 1;
+  if (hrank) hhits++;
+  report.known_items.push({ ...k, rank: rank || null, hybrid_rank: hrank || null });
+  console.log(`kw ${rank ? `#${rank}` : "MISS"}\thy ${hrank ? `#${hrank}` : "MISS"}\t${k.query}`);
 }
-console.log(`\nKnown-item: ${hits}/${set.known_items.length} in top 5 (target >= 18)\n`);
+console.log(`\nKnown-item: keyword ${hits}/${set.known_items.length}, hybrid ${hhits}/${set.known_items.length} in top 5 (target >= 18)\n`);
 for (const question of set.questions) {
   const top = await hybrid(question);
   report.questions.push({ question, top5: top });

@@ -37,7 +37,8 @@ export function rrf(lists: PostCard[][], k = 60): PostCard[] {
 }
 
 export async function search(env: Env, q: string, mode: Mode, f: Filters, limit = 20, ctx?: ExecutionContext): Promise<SearchResult> {
-  if (mode === "keyword") return { mode, posts: await keywordSearch(env, q, f, limit) };
+  // A fully quoted query asks for that exact phrase: keyword only.
+  if (mode === "keyword" || /^\s*".+"\s*$/.test(q)) return { mode, posts: await keywordSearch(env, q, f, limit) };
   if ((await semanticStatus(env)) === "degraded") {
     return { mode: "keyword", posts: await keywordSearch(env, q, f, limit), degraded: "Search by meaning is unavailable right now; showing keyword results." };
   }

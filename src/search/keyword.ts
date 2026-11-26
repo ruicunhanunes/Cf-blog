@@ -27,6 +27,11 @@ export function toFtsQuery(q: string, joiner: " " | " OR " = " "): string {
 }
 
 export async function keywordSearch(env: Env, q: string, f: Filters, limit = 20, offset = 0): Promise<PostCard[]> {
+  const quoted = q.trim().match(/^"(.+)"$/);
+  if (quoted) {
+    const phrase = quoted[1].toLowerCase().replace(/[^\p{L}\p{N}\s]+/gu, " ").trim();
+    return phrase ? runFts(env, `"${phrase}"`, f, limit, offset) : [];
+  }
   const strict = toFtsQuery(q);
   if (!strict) return [];
   const first = await runFts(env, strict, f, limit, offset);

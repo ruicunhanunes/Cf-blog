@@ -38,6 +38,7 @@ Public AI Search endpoint (from `/.well-known/api-catalog`): `POST /search` answ
 | Second run writes 0 posts | Yes: incremental run wrote 0 |
 | Known-item test set (keyword) | 18 / 20 in the top 5 (target ≥ 18). Misses: "cloudbleed parser memory leak" and "1.1.1.1 dns resolver launch" (the April 2018 launch post `announcing-1111` is #3; the test expects its companion post) |
 | Hybrid: 10 questions | 10 / 10 with a relevant post in the top 3 (target ≥ 8 in the top 5) |
+| Known-item test set (merged search, what users get) | 19 / 20 in the top 5 |
 | Hybrid: "regex outage 2019" | July 2, 2019 post at #1 (official MCP server: #40) |
 | Canary | primary ✓, fallback ✓ → `semantic_status = ok` |
 | Locales dropped in the backfill | 4,428 URLs across 20 locales |
@@ -55,7 +56,9 @@ Queue consumer (concurrency 2, batch 5)
 Worker (behind Access)
   /, /search, /year|tag|author/*   server-rendered mobile UI (works without JS)
   /api/*                           JSON API
-  Meaning mode = hybrid: D1 FTS5 ∥ blog's public AI Search /search (fallback /.well-known/search), RRF k=60
+  One search box, no modes: D1 FTS5 ∥ blog's public AI Search /search (fallback /.well-known/search), merged by RRF k=60.
+                 While typing: keyword-only after 150 ms (instant), merged results after a 700 ms pause.
+                 "Quoted text" = exact phrase only. If the semantic side fails or is degraded, keyword results show silently.
                  endpoint hostname from api-catalog (cached 1 day), responses cached 1 h, 30 queries/min, 3 s timeout,
                  unknown slugs are shown from endpoint metadata and enqueued for fetching
   /authorize, /mcp                 M4 add-on (OAuth via workers-oauth-provider; /authorize behind Access)
@@ -120,6 +123,7 @@ curl "localhost:8799/ui/?as=intruder@example.com"         # → 403
 | OAuth via Access for SaaS OIDC | `workers-oauth-provider`, with `/authorize` behind the Access self-hosted app | The same guarantee ("only identities in the Access policy get a token") without a second Access application or client secrets. |
 | `/admin/*` needs an Access service token too | Access identity + same-origin POST check | Re-crawls are idempotent and rate-limited by the queue. Add a service-token check if you share the app. |
 | Email alerts (failed sync, degraded canary) | `console.error` lines with `outcome: "ALERT"` in Workers Logs, `sync_runs.status`, `settings.semantic_status`; the footer shows the last run | No Email Service sender is configured on the account. |
+| A Keyword / Meaning toggle in the UI | One search box; every search is keyword + meaning merged | The merged ranking measured better on exact lookups too (19/20 vs 18/20), so the choice added nothing. The `/api/search?mode=` parameter still exists for scripts. |
 | Keyword search ANDs every term | AND first; if nothing matches, stopwords are removed and terms ORed (still bm25-ranked) | Natural-language questions such as "What did Cloudflare write about the July 2019 outage?" otherwise return nothing. |
 
 ## Repository layout

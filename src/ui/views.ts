@@ -3,7 +3,6 @@ import { escapeHtml as e } from "../search/semantic";
 
 const CSS = `
 :root{--bg:#fff;--fg:#1d1d1f;--muted:#6e6e73;--line:#e5e5ea;--card:#fafafa;--accent:#f6821f;--mark:#ffe8b3;color-scheme:light dark}
-@media (min-width:600px){form.s input[type=search]{flex:1 1 auto}.seg{flex:0 0 auto}}
 @media (prefers-color-scheme:dark){:root{--bg:#111;--fg:#f2f2f7;--muted:#a1a1a6;--line:#2c2c2e;--card:#1c1c1e;--accent:#ff9f45;--mark:#5a4210}}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
@@ -12,11 +11,6 @@ header{position:sticky;top:0;background:var(--bg);padding:10px 0 8px;z-index:2;b
 .brand{font-weight:700;text-decoration:none;font-size:15px;color:var(--muted)}
 form.s{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 form.s input[type=search]{flex:1 1 100%;min-width:0;min-height:44px;font-size:17px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg)}
-.seg{display:flex;flex:1 1 100%;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.seg label{flex:1;display:flex;align-items:center;justify-content:center;padding:0 12px;min-height:44px;font-size:15px;cursor:pointer}
-.seg label+label{border-left:1px solid var(--line)}
-.seg label:has(input:checked){background:var(--card)}
-.seg input{position:absolute;opacity:0}.seg input:checked+span{color:var(--accent);font-weight:600}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0;font-size:14px;color:var(--muted)}
 .filters input,.filters select{min-height:36px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);padding:4px 8px;font-size:14px}
 .card{display:block;text-decoration:none;padding:14px 0;border-bottom:1px solid var(--line);min-height:44px}
@@ -37,9 +31,7 @@ footer{margin-top:32px;font-size:12px;color:var(--muted)}
 .az a{min-width:36px;justify-content:center}
 `;
 
-export function layout(title: string, body: string, opts: { q?: string; mode?: string; footer?: string; meaning?: boolean } = {}): string {
-  const mode = opts.mode ?? "keyword";
-  const meaning = opts.meaning !== false;
+export function layout(title: string, body: string, opts: { q?: string; footer?: string } = {}): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
@@ -49,20 +41,20 @@ export function layout(title: string, body: string, opts: { q?: string; mode?: s
 <title>${e(title)}</title><style>${CSS}</style></head><body><main>
 <header><a class="brand" href="/">Cloudflare Blog Library</a>
 <form class="s" action="/search" method="get" role="search">
-<input type="search" name="q" value="${e(opts.q ?? "")}" placeholder="Search every post" autocomplete="off" autocapitalize="off" enterkeyhint="search" aria-label="Search">
-${meaning ? `<div class="seg" role="radiogroup" aria-label="Mode">
-<label><input type="radio" name="mode" value="keyword" ${mode === "keyword" ? "checked" : ""}><span>Keyword</span></label>
-<label><input type="radio" name="mode" value="hybrid" ${mode !== "keyword" ? "checked" : ""}><span>Meaning</span></label>
-</div>` : `<input type="hidden" name="mode" value="keyword">`}</form></header>
+<input type="search" name="q" value="${e(opts.q ?? "")}" placeholder="Search by title, topic or question" autocomplete="off" autocapitalize="off" enterkeyhint="search" aria-label="Search">
+</form></header>
 ${body}
 <footer>${opts.footer ?? ""}</footer></main>
 <script>
-(()=>{const f=document.querySelector('form.s');if(!f)return;const i=f.querySelector('input[type=search]');let t;
-f.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',()=>{if(i.value.trim())f.submit()}));
-i.addEventListener('input',()=>{clearTimeout(t);const q=i.value.trim();if(q.length<3)return;t=setTimeout(async()=>{
-const p=new URLSearchParams(new FormData(f));p.set('partial','1');const r=await fetch('/search?'+p,{credentials:'same-origin'});
-if(!r.ok)return;const el=document.getElementById('results');if(el){el.outerHTML=await r.text();history.replaceState(null,'','/search?'+new URLSearchParams(new FormData(f)))}
-else location.href='/search?'+new URLSearchParams(new FormData(f))},350)})})();
+// Two-phase live search: instant keyword results while typing (fast=1), then the full
+// keyword + meaning results once typing pauses. Stale responses are dropped.
+(()=>{const f=document.querySelector('form.s');if(!f)return;const i=f.querySelector('input[type=search]');let t1,t2,seq=0;
+async function load(fast){const q=i.value.trim();if(q.length<2)return;const my=++seq;
+const p=new URLSearchParams({q});new URLSearchParams(location.search).forEach((v,k)=>{if(['tag','from','to','author'].includes(k))p.set(k,v)});
+const url='/search?'+p;p.set('partial','1');if(fast)p.set('fast','1');
+const r=await fetch('/search?'+p,{credentials:'same-origin'});if(!r.ok||my!==seq)return;
+const el=document.getElementById('results');if(el){el.outerHTML=await r.text();history.replaceState(null,'',url)}else location.href=url}
+i.addEventListener('input',()=>{clearTimeout(t1);clearTimeout(t2);t1=setTimeout(()=>load(true),150);t2=setTimeout(()=>load(false),700)})})();
 </script></body></html>`;
 }
 
@@ -84,7 +76,7 @@ export function resultsBlock(posts: PostCard[], extra = ""): string {
 }
 
 export function filtersForm(action: string, p: URLSearchParams, tags: { slug: string; name: string }[]): string {
-  const keep = ["q", "mode", "sort"].map((k) => (p.get(k) ? `<input type="hidden" name="${k}" value="${e(p.get(k)!)}">` : "")).join("");
+  const keep = ["q", "sort"].map((k) => (p.get(k) ? `<input type="hidden" name="${k}" value="${e(p.get(k)!)}">` : "")).join("");
   return `<form class="filters" action="${e(action)}" method="get">${keep}
 <label>From <input type="number" name="from" min="2009" max="2100" inputmode="numeric" placeholder="year" value="${e(p.get("from") ?? "")}" style="width:84px"></label>
 <label>To <input type="number" name="to" min="2009" max="2100" inputmode="numeric" placeholder="year" value="${e(p.get("to") ?? "")}" style="width:84px"></label>
